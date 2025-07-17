@@ -43,6 +43,7 @@ export default function HomePage() {
           <Link href="/registro" className="hover:text-teal-300 transition">Registro</Link>
           <Link href="/login" className="hover:text-teal-300 transition">Login</Link>
           <Link href="/terminos" className="hover:text-teal-300 transition">Términos</Link>
+          <Link href="/privacidad" className="hover:text-teal-300 transition">Privacidad</Link>
         </div>
       </nav>
 
