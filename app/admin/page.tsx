@@ -35,7 +35,7 @@ export default function AdminPage() {
 
     const fetchConfig = async () => {
       try {
-        const res = await fetch(`https://agenda-connect.com/api/config/${slug}`, {
+        const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -68,7 +68,7 @@ export default function AdminPage() {
 
   const guardarConfig = async () => {
     try {
-      const res = await fetch(`https://agenda-connect.com/api/config/${slug}`, {
+      const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

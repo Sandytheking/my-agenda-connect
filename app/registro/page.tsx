@@ -29,7 +29,7 @@ export default function Registro() {
     setSlugMensaje("Verificando...");
 
     try {
-      const res = await fetch(`https://agenda-connect.com/api/slug-exists/${limpio}`);
+      const res = await fetch(`https://api.agenda-connect.com/api/slug-exists/${limpio}`);
       const data = await res.json();
 
       if (data.exists) {
