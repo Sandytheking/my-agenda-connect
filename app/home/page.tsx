@@ -35,7 +35,7 @@ export default function HomePage() {
       {/* Navbar */}
       <nav className="w-full px-6 py-4 flex justify-between items-center border-b border-gray-700 bg-[#0C1A1A]">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Agenda Connect" width={40} height={40} />
+          <Image src="/logo2.png" alt="Agenda Connect" width={40} height={40} />
           <span className="text-xl font-bold text-white hidden sm:inline">Agenda Connect</span>
         </Link>
         <div className="flex gap-6 text-sm font-medium">
