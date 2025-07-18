@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,9 +10,16 @@ export default function Navbar() {
   return (
     <header className="bg-[#0C1A1A] text-white shadow-md fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-3 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <Image src="/logo2.png" alt="Logo" width={40} height={40} />
-          <div className="rounded-full mr-3">
+        <div className="flex items-center gap-3 ml-2"> {/* ← más a la izquierda */}
+          <div className="rounded-full overflow-hidden w-10 h-10"> {/* ← círculo */}
+            <Image
+              src="/logo2.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="object-cover"
+            />
+          </div>
           <span className="text-xl font-bold">Agenda Connect</span>
         </div>
 
@@ -50,4 +57,4 @@ export default function Navbar() {
       )}
     </header>
   );
-
+}

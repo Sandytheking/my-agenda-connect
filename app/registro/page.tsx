@@ -11,6 +11,7 @@ export default function Registro() {
   const [slug, setSlug] = useState("");
   const [aceptado, setAceptado] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const [slugStatus, setSlugStatus] = useState<null | "ok" | "error" | "checking">(null);
   const [slugMensaje, setSlugMensaje] = useState("");
@@ -46,48 +47,57 @@ export default function Registro() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!email || !password || !nombre || !slug) {
-    setMensaje("⚠️ Todos los campos son obligatorios");
-    return;
-  }
-
-  if (!aceptado) {
-    setMensaje("Debes aceptar los Términos y Condiciones.");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://api.agenda-connect.com/api/registro", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        nombre,
-        slug,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setMensaje(`⛔ Error: ${data?.message || "no se pudo registrar"}`);
+    if (!email || !password || !nombre || !slug) {
+      setMensaje("⚠️ Todos los campos son obligatorios");
       return;
     }
 
-    setMensaje("✅ Registro exitoso. Redirigiendo...");
-    setTimeout(() => {
-      router.push("/login");
-    }, 2000);
-  } catch (error) {
-    setMensaje("⛔ Error al conectar con el servidor.");
-  }
-};
+    if (!aceptado) {
+      setMensaje("Debes aceptar los Términos y Condiciones.");
+      return;
+    }
 
+    setCargando(true);
+    setMensaje("Creando cuenta...");
+
+    try {
+      const res = await fetch("https://api.agenda-connect.com/api/registro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          nombre,
+          slug,
+          accepted_terms: true,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 409) {
+          setMensaje("⚠️ El slug ya está en uso. Elige otro.");
+        } else if (data?.error) {
+          setMensaje(`⚠️ ${data.error}`);
+        } else {
+          setMensaje("❌ Error desconocido al registrar");
+        }
+      } else {
+        setMensaje("✅ Registro exitoso. Redirigiendo...");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error en registro:", error);
+      setMensaje("❌ Error al conectar con el servidor.");
+    } finally {
+      setCargando(false);
+    }
+  };
 
   const botonDeshabilitado = slugStatus !== "ok" || !aceptado;
 
@@ -97,8 +107,6 @@ export default function Registro() {
         onSubmit={handleSubmit}
         className="w-full max-w-md space-y-6 bg-[#01257D] p-8 rounded-xl shadow-md"
       >
-       
-
         <h1 className="text-2xl font-bold text-center">Registro de Negocio</h1>
 
         <input
@@ -128,7 +136,7 @@ export default function Registro() {
         <div>
           <input
             type="text"
-            placeholder="(Slug)Ej: Maria-salon"
+            placeholder="(Slug) Ej: maria-salon"
             className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
@@ -168,14 +176,36 @@ export default function Registro() {
 
         <button
           type="submit"
-          disabled={botonDeshabilitado}
-          className={`w-full py-2 font-semibold rounded-md transition ${
-            botonDeshabilitado
+          disabled={botonDeshabilitado || cargando}
+          className={`w-full py-2 font-semibold rounded-md transition flex items-center justify-center ${
+            botonDeshabilitado || cargando
               ? "bg-gray-500 text-white cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-500"
           }`}
         >
-          Registrarse
+          {cargando && (
+            <svg
+              className="animate-spin mr-2 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+              ></path>
+            </svg>
+          )}
+          {cargando ? "Registrando..." : "Registrarse"}
         </button>
       </form>
     </div>
