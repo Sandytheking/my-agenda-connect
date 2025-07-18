@@ -34,7 +34,7 @@ export default function HomePage() {
       <div
       className="min-h-screen bg-cover bg-center text-white"
       style={{
-        backgroundImage: "url('/fondonegro.jpg')",
+        backgroundImage: "url('/azul234.webp')",
       }}
     >
       <main className="px-6 py-12">
