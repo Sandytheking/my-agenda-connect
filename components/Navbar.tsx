@@ -9,9 +9,10 @@ export default function Navbar() {
 
   return (
     <header className="bg-[#0C1A1A] text-white shadow-md fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-3 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Image src="/logo2.png" alt="Logo" width={40} height={40} />
+          <div className="rounded-full mr-3">
           <span className="text-xl font-bold">Agenda Connect</span>
         </div>
 
