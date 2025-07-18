@@ -31,15 +31,11 @@ export default function HomePage() {
   ];
 
   return (
-     <div
+      <div
+      className="min-h-screen bg-cover bg-center text-white"
       style={{
         backgroundImage: "url('/fondonegro.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
       }}
-
-    <div className="min-h-screen bg-[#0C1A1A] text-white">
-
     >
       <main className="px-6 py-12">
         <div className="max-w-6xl mx-auto">
