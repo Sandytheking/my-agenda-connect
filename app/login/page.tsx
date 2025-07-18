@@ -49,22 +49,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
+     <div
+      className="min-h-screen flex items-center justify-center px-4 text-white bg-cover bg-center"
+      style={{ backgroundImage: "url('/azul34.webp')" }}
+    >
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md space-y-6 bg-[#01257D] p-8 rounded-xl shadow-md"
+        className="w-full max-w-md space-y-6 bg-[#01257D] p-8 rounded-xl shadow-md bg-opacity-90"
       >
-        {/* Logo */}
-        <div className="flex justify-center mb-4">
-          <Image
-            src="/logo2.png"
-            alt="Logo de Agenda Connect"
-            width={90}
-            height={90}
-            className="rounded-full shadow-md"
-          />
-        </div>
-
         <h1 className="text-2xl font-bold text-center">Iniciar Sesión</h1>
 
         <input
