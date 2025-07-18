@@ -124,7 +124,7 @@ export default function AdminPage() {
 
   const conectarGoogle = () => {
     if (!slug) return setMensaje("❌ No se encontró el negocio.");
-    window.location.href = `https://agenda-connect.com/api/oauth/start?slug=${slug}`;
+    window.location.href = `https://api.agenda-connect.com/api/oauth/start?slug=${slug}`;
   };
 
   return (
