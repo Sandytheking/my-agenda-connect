@@ -177,10 +177,10 @@ export default function Registro() {
         <button
           type="submit"
           disabled={botonDeshabilitado || cargando}
-          className={`w-full py-2 font-semibold rounded-md transition flex items-center justify-center ${
+          className={`w-full py-2 font-semibold rounded-md flex items-center justify-center transition-transform duration-200 ${
             botonDeshabilitado || cargando
               ? "bg-gray-500 text-white cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-500"
+              : "bg-blue-600 text-white hover:bg-blue-500 hover:scale-105 active:scale-95"
           }`}
         >
           {cargando && (

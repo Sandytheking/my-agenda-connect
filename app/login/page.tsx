@@ -8,6 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const router = useRouter();
 
@@ -18,6 +19,9 @@ export default function Login() {
       setMensaje("⚠️ Email y contraseña obligatorios.");
       return;
     }
+
+    setCargando(true);
+    setMensaje("Verificando...");
 
     try {
       const res = await fetch("https://api.agenda-connect.com/api/login", {
@@ -30,16 +34,17 @@ export default function Login() {
 
       if (!res.ok) {
         setMensaje("❌ " + (data.error || "Credenciales inválidas."));
-        return;
+      } else {
+        sessionStorage.setItem("accessToken", data.access_token);
+        sessionStorage.setItem("slug", data.slug);
+
+        setMensaje("✅ Bienvenido. Redirigiendo...");
+        setTimeout(() => router.push("/admin"), 1500);
       }
-
-      sessionStorage.setItem("accessToken", data.access_token);
-      sessionStorage.setItem("slug", data.slug);
-
-      setMensaje("✅ Bienvenido. Redirigiendo...");
-      setTimeout(() => router.push("/admin"), 1500);
     } catch (err) {
       setMensaje("❌ Error al conectar con el servidor.");
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -84,9 +89,36 @@ export default function Login() {
 
         <button
           type="submit"
-          className="w-full py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500 transition"
+          disabled={cargando}
+          className={`w-full py-2 font-semibold rounded-md transition flex items-center justify-center ${
+            cargando
+              ? "bg-gray-500 text-white cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-500"
+          }`}
         >
-          Iniciar Sesión
+          {cargando && (
+            <svg
+              className="animate-spin mr-2 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+              ></path>
+            </svg>
+          )}
+          {cargando ? "Ingresando..." : "Iniciar Sesión"}
         </button>
       </form>
     </div>
