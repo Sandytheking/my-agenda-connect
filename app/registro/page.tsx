@@ -72,16 +72,7 @@ export default function Registro() {
         onSubmit={handleSubmit}
         className="w-full max-w-md space-y-6 bg-[#01257D] p-8 rounded-xl shadow-md"
       >
-        {/* Logo */}
-        <div className="flex justify-center mb-4">
-          <Image
-            src="/logo2.png"
-            alt="Logo de Agenda Connect"
-            width={90}
-            height={90}
-            className="rounded-full shadow-md"
-          />
-        </div>
+       
 
         <h1 className="text-2xl font-bold text-center">Registro de Negocio</h1>
 
