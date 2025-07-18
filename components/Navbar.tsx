@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -6,7 +6,6 @@ import { useState } from "react";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-<body className={`${inter.className} pt-20`}>
 
   return (
     <header className="bg-[#0C1A1A] text-white shadow-md fixed w-full z-50">
