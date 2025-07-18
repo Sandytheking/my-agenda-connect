@@ -125,6 +125,7 @@ export default function AdminPage() {
     } catch {
       setMensaje("❌ Error al conectar con el servidor.");
     }
+      setTimeout(() => setMensaje(""), 10000); // Desaparece el mensaje luego de 10 segundos
   };
 
   const toggleDay = (value: string) => {
