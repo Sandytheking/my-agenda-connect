@@ -41,7 +41,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           {/* Encabezado */}
           <section className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-blue-400 mb-4">Agenda Connect</h1>
+            <h1 className="text-5xl font-bold text-blue-600 mb-4">Agenda Connect</h1>
             <p className="text-xl text-white/90">
               Simplifica la gestión de tus citas. Sincroniza automáticamente con Google Calendar,
               personaliza tus horarios y recibe reservas en segundos.
