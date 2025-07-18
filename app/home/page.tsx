@@ -31,7 +31,16 @@ export default function HomePage() {
   ];
 
   return (
+     <div
+      style={{
+        backgroundImage: "url('/fondonegrol.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      
     <div className="min-h-screen bg-[#0C1A1A] text-white">
+
+    >
       <main className="px-6 py-12">
         <div className="max-w-6xl mx-auto">
           {/* Encabezado */}
