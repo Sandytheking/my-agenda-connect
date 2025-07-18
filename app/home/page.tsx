@@ -33,11 +33,11 @@ export default function HomePage() {
   return (
      <div
       style={{
-        backgroundImage: "url('/fondonegrol.jpg')",
+        backgroundImage: "url('/fondonegro.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      
+
     <div className="min-h-screen bg-[#0C1A1A] text-white">
 
     >
