@@ -78,48 +78,56 @@ export default function AdminPage() {
   }
 
   const guardarConfig = async () => {
-    const dayNumberToName: { [key: string]: string } = {
-      "1": "Monday",
-      "2": "Tuesday",
-      "3": "Wednesday",
-      "4": "Thursday",
-      "5": "Friday",
-      "6": "Saturday",
-      "7": "Sunday",
-    };
+  if (!token || !slug) {
+    setMensaje("❌ Sesión inválida. Inicia sesión nuevamente.");
+    router.push("/login");
+    return;
+  }
 
-    const diasSeleccionados = workDays
-      .map((n) => dayNumberToName[n])
-      .filter(Boolean);
-
-    if (diasSeleccionados.length === 0) {
-      setMensaje("❌ Debes seleccionar al menos un día laborable.");
-      return;
-    }
-
-    try {
-      const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          max_per_day: Number(maxPerDay),
-          max_per_hour: Number(maxPerHour),
-          duration_minutes: Number(duration),
-          work_days: diasSeleccionados,
-          start_hour: to24hFormat(startHour),
-          end_hour: to24hFormat(endHour),
-        }),
-      });
-
-      const data = await res.json();
-      setMensaje(res.ok ? "✅ Configuración guardada correctamente." : `❌ ${data.error || "No se pudo guardar."}`);
-    } catch {
-      setMensaje("❌ Error al conectar con el servidor.");
-    }
+  const dayNumberToName: { [key: string]: string } = {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday",
   };
+
+  // Validación robusta de días seleccionados
+  const diasSeleccionados = workDays
+    .filter((day) => !!dayNumberToName[day]) // Solo valores válidos
+    .map((day) => dayNumberToName[day]);
+
+  if (diasSeleccionados.length === 0) {
+    setMensaje("❌ Debes seleccionar al menos un día laborable.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        max_per_day: Number(maxPerDay),
+        max_per_hour: Number(maxPerHour),
+        duration_minutes: Number(duration),
+        work_days: diasSeleccionados,
+        start_hour: to24hFormat(startHour),
+        end_hour: to24hFormat(endHour),
+      }),
+    });
+
+    const data = await res.json();
+    setMensaje(res.ok ? "✅ Configuración guardada correctamente." : `❌ ${data.error || "No se pudo guardar."}`);
+  } catch {
+    setMensaje("❌ Error al conectar con el servidor.");
+  }
+};
+
 
   const toggleDay = (value: string) => {
     setWorkDays((prev) =>
