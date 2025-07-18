@@ -66,6 +66,17 @@ export default function AdminPage() {
     fetchConfig();
   }, []);
 
+  function to24hFormat(timeStr: string): string {
+    if (!timeStr.includes("AM") && !timeStr.includes("PM")) return timeStr;
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  }
+
   const guardarConfig = async () => {
     const dayNumberToName: { [key: string]: string } = {
       "1": "Monday",
@@ -98,8 +109,8 @@ export default function AdminPage() {
           max_per_hour: Number(maxPerHour),
           duration_minutes: Number(duration),
           work_days: diasSeleccionados,
-          start_hour: startHour,
-          end_hour: endHour,
+          start_hour: to24hFormat(startHour),
+          end_hour: to24hFormat(endHour),
         }),
       });
 
