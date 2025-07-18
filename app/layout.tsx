@@ -1,21 +1,25 @@
 import "./globals.css";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "../components/Navbar";
+import type { Metadata } from "next";
+import Navbar from "@/components/Navbar"; // este sí es cliente
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Agenda Connect",
-  description: "Gestión de citas sincronizada con Google Calendar",
+  description: "Sistema de reservas para negocios",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="es">
-      <body className={`${inter.className} bg-[#0C1A1A] text-white`}>
-        <Navbar />
-        <main className="pt-24 px-4">{children}</main>
+      <body className={inter.className}>
+        <Navbar /> {/* navbar cliente */}
+        {children}
       </body>
     </html>
   );
