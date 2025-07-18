@@ -32,25 +32,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#0C1A1A] text-white">
-      {/* Navbar */}
-      <nav className="w-full px-6 py-4 flex justify-between items-center border-b border-gray-700 bg-[#0C1A1A]">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo2.png" alt="Agenda Connect" width={40} height={40} />
-          <span className="text-xl font-bold text-white hidden sm:inline">Agenda Connect</span>
-        </Link>
-        <div className="flex gap-6 text-sm font-medium">
-          <Link href="/home" className="hover:text-teal-300 transition">Inicio</Link>
-          <Link href="/registro" className="hover:text-teal-300 transition">Registro</Link>
-          <Link href="/login" className="hover:text-teal-300 transition">Login</Link>
-          <Link href="/terminos" className="hover:text-teal-300 transition">Términos</Link>
-          <Link href="/privacidad" className="hover:text-teal-300 transition">Privacidad</Link>
-        </div>
-      </nav>
-
-      {/* Contenido principal */}
       <main className="px-6 py-12">
         <div className="max-w-6xl mx-auto">
-
           {/* Encabezado */}
           <section className="text-center mb-16">
             <h1 className="text-5xl font-bold text-blue-400 mb-4">Agenda Connect</h1>
