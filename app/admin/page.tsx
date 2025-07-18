@@ -67,6 +67,25 @@ export default function AdminPage() {
   }, []);
 
   const guardarConfig = async () => {
+    const dayNumberToName: { [key: string]: string } = {
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday",
+    };
+
+    const diasSeleccionados = workDays
+      .map((n) => dayNumberToName[n])
+      .filter(Boolean);
+
+    if (diasSeleccionados.length === 0) {
+      setMensaje("❌ Debes seleccionar al menos un día laborable.");
+      return;
+    }
+
     try {
       const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
         method: "PUT",
@@ -78,7 +97,7 @@ export default function AdminPage() {
           max_per_day: Number(maxPerDay),
           max_per_hour: Number(maxPerHour),
           duration_minutes: Number(duration),
-          work_days: workDays.join(""),
+          work_days: diasSeleccionados,
           start_hour: startHour,
           end_hour: endHour,
         }),
