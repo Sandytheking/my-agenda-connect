@@ -1,7 +1,7 @@
 export default function PoliticaPrivacidad() {
   return (
     <section className="max-w-3xl mx-auto py-10 px-4 text-white">
-      <h1 className="text-3xl font-bold mb-4 text-center">Política de Privacidad</h1>
+      <h1 className="text-3xl font-bold mb-4 text-left">Política de Privacidad</h1>
       <p className="mb-6">
         En <strong>Agenda Connect</strong>, nos comprometemos a proteger la privacidad de los usuarios que utilizan nuestra plataforma de reservas y gestión de citas.
       </p>
