@@ -102,10 +102,13 @@ export default function Registro() {
   const botonDeshabilitado = slugStatus !== "ok" || !aceptado;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
+      <div
+      className="min-h-screen flex items-center justify-center px-4 text-white bg-cover bg-center"
+      style={{ backgroundImage: "url('/azul2.webp')" }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-6 bg-[#01257D] p-8 rounded-xl shadow-md"
+        className="w-full max-w-md space-y-6 bg-[#000000] p-8 rounded-xl shadow-md"
       >
         <h1 className="text-2xl font-bold text-center">Registro de Negocio</h1>
 

@@ -55,7 +55,7 @@ export default function Login() {
     >
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md space-y-6 bg-[#01257D] p-8 rounded-xl shadow-md bg-opacity-90"
+        className="w-full max-w-md space-y-6 bg-[#000000] p-8 rounded-xl shadow-md bg-opacity-90"
       >
         <h1 className="text-2xl font-bold text-center">Iniciar Sesión</h1>
 
