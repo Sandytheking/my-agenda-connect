@@ -46,15 +46,36 @@ export default function Registro() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!email || !password || !nombre || !slug) {
-      setMensaje("⚠️ Todos los campos son obligatorios");
-      return;
-    }
+  if (!email || !password || !nombre || !slug) {
+    setMensaje("⚠️ Todos los campos son obligatorios");
+    return;
+  }
 
-    if (!aceptado) {
-      setMensaje("Debes aceptar los Términos y Condiciones.");
+  if (!aceptado) {
+    setMensaje("Debes aceptar los Términos y Condiciones.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://api.agenda-connect.com/api/registro", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        nombre,
+        slug,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMensaje(`⛔ Error: ${data?.message || "no se pudo registrar"}`);
       return;
     }
 
@@ -62,7 +83,11 @@ export default function Registro() {
     setTimeout(() => {
       router.push("/login");
     }, 2000);
-  };
+  } catch (error) {
+    setMensaje("⛔ Error al conectar con el servidor.");
+  }
+};
+
 
   const botonDeshabilitado = slugStatus !== "ok" || !aceptado;
 
