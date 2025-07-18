@@ -8,7 +8,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-[#0C1A1A] text-white shadow-md fixed w-full z-50">
+    <header className="bg-[#000000] text-white shadow-md fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-3 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3 ml-2"> {/* ← más a la izquierda */}
           <div className="rounded-full overflow-hidden w-10 h-10"> {/* ← círculo */}
