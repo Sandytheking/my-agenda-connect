@@ -49,13 +49,11 @@ export default function Login() {
   };
 
   return (
-     <div
-      className="min-h-screen flex items-center justify-center px-4 text-white bg-cover bg-center"
-      style={{ backgroundImage: "url('/azul34.webp')" }}
-    >
+   <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
+    
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md space-y-6 bg-[#000000] p-8 rounded-xl shadow-md bg-opacity-90"
+        className="w-full max-w-md space-y-6 bg-[#4c2882] p-8 rounded-xl shadow-md bg-opacity-90"
       >
         <h1 className="text-2xl font-bold text-center">Iniciar Sesión</h1>
 
@@ -76,7 +74,7 @@ export default function Login() {
         />
 
         {mensaje && (
-          <div className="text-sm text-center text-red-400 font-medium">{mensaje}</div>
+          <div className="text-sm text-center text-green-400 font-medium">{mensaje}</div>
         )}
 
         <button
@@ -85,7 +83,7 @@ export default function Login() {
           className={`w-full py-2 font-semibold rounded-md transition flex items-center justify-center ${
             cargando
               ? "bg-gray-500 text-white cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-500"
+              : "bg-green-400 text-white hover:bg-green-600"
           }`}
         >
           {cargando && (

@@ -147,7 +147,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#000000] flex items-center justify-center text-white">
-      <div className="bg-[#0C1A1A] p-10 rounded-2xl shadow-md w-full max-w-2xl border border-gray-700">
+      <div className="bg-[#4c2882] p-10 rounded-2xl shadow-md w-full max-w-2xl border border-gray-700">
         <h1 className="text-4xl font-bold text-center mb-10">Panel de Administración</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
@@ -239,13 +239,13 @@ export default function AdminPage() {
         <div className="mt-8 flex flex-col md:flex-row justify-center gap-4">
           <button
             onClick={guardarConfig}
-            className="bg-white text-black font-semibold py-2 px-6 rounded transition duration-200 transform hover:scale-105"
+            className="bg-green-400 text-black font-semibold py-2 px-6 rounded transition duration-200 transform hover:scale-105"
           >
             Guardar
           </button>
           <button
             onClick={desconectar}
-            className="bg-white text-black font-semibold py-2 px-6 rounded transition duration-200 transform hover:scale-105"
+            className="bg-rose-700 text-black font-semibold py-2 px-6 rounded transition duration-200 transform hover:scale-105"
           >
             Cerrar sesión
           </button>

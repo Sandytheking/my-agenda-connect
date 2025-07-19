@@ -6,27 +6,33 @@ export default function HomePage() {
     {
       titulo: "1. Regístrate",
       descripcion: "Crea una cuenta y personaliza tu enlace de reservas.",
-      imagen: "/paso-registro.png",
+      imagen: "/registro2.webp",
     },
     {
       titulo: "2. Configura tu disponibilidad",
       descripcion: "Define horarios, duración de citas y días laborales.",
-      imagen: "/paso-agendar.png",
+      imagen: "/admin2.wepb",
     },
     {
       titulo: "3. Conecta tu Google Calendar",
       descripcion: "Sincroniza automáticamente tus reservas con tu calendario.",
-      imagen: "/paso-google.png",
+      imagen: "/sinc.webp",
     },
     {
       titulo: "4. Comparte tu enlace",
       descripcion: "Tus clientes podrán reservar fácilmente desde cualquier dispositivo.",
-      imagen: "/paso-comparte.png",
+      imagen: "/mensaj.webp",
+    },
+    {
+
+       titulo: "4. Notificaciones",
+      descripcion: "Notificaciones a tu telefono cada vez que agenden una cita.",
+      imagen: "/notificacion2.webp",
     },
     {
       titulo: "5. Gestiona desde tu panel",
       descripcion: "Consulta y ajusta tu configuración en todo momento.",
-      imagen: "/paso-admin.png",
+      imagen: "/admin2.webp",
     },
   ];
 
@@ -34,14 +40,14 @@ export default function HomePage() {
       <div
       className="min-h-screen bg-cover bg-center text-white"
       style={{
-        backgroundImage: "url('/fondo12.webp')",
+        backgroundImage: "url('/negro1.webp')",
       }}
     >
       <main className="px-6 py-12">
         <div className="max-w-6xl mx-auto">
           {/* Encabezado */}
           <section className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-blue-600 mb-4">Agenda Connect</h1>
+            <h1 className="text-5xl font-bold text-purple-400 mb-4">Agenda Connect</h1>
             <p className="text-xl text-white/90">
               Simplifica la gestión de tus citas. Sincroniza automáticamente con Google Calendar,
               personaliza tus horarios y recibe reservas en segundos.
@@ -57,7 +63,7 @@ export default function HomePage() {
               {pasos.map((paso, index) => (
                 <div
                   key={index}
-                  className="bg-black p-6 rounded-xl shadow-md flex flex-col items-center text-center transition duration-500 hover:scale-105"
+                  className="bg-purple-500/55 p-6 rounded-xl shadow-md flex flex-col items-center text-center transition duration-500 hover:scale-105"
                 >
                   <Image
                     src={paso.imagen}
@@ -80,7 +86,7 @@ export default function HomePage() {
               <li>Crea tu propio enlace de reservas personalizado.</li>
               <li>Configura tu horario, duración de citas y días laborales.</li>
               <li>Sincronización automática con Google Calendar.</li>
-              <li>Recibe notificaciones por correo al instante.</li>
+              <li>Recibe notificaciones por correo y al instante.</li>
               <li>Panel de administración fácil de usar para negocios.</li>
             </ul>
           </section>

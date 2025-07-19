@@ -102,13 +102,10 @@ export default function Registro() {
   const botonDeshabilitado = slugStatus !== "ok" || !aceptado;
 
   return (
-      <div
-      className="min-h-screen flex items-center justify-center px-4 text-white bg-cover bg-center"
-      style={{ backgroundImage: "url('/azul2.webp')" }}
-    >
+   <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-6 bg-[#000000] p-8 rounded-xl shadow-md"
+        className="w-full max-w-md space-y-6 bg-[#4c2882] p-8 rounded-xl shadow-md"
       >
         <h1 className="text-2xl font-bold text-center">Registro de Negocio</h1>
 
@@ -183,7 +180,7 @@ export default function Registro() {
           className={`w-full py-2 font-semibold rounded-md flex items-center justify-center transition-transform duration-200 ${
             botonDeshabilitado || cargando
               ? "bg-gray-500 text-white cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-500 hover:scale-105 active:scale-95"
+              : "bg-green-400 text-white hover:bg-green-600 hover:scale-105 active:scale-95"
           }`}
         >
           {cargando && (
