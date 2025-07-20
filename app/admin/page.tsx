@@ -13,6 +13,9 @@ export default function AdminPage() {
   const [endHour, setEndHour] = useState("17:00");
   const [workDays, setWorkDays] = useState<string[]>([]);
   const [mensaje, setMensaje] = useState("");
+  const [isActivo, setIsActivo] = useState(true);
+  const [fechaVencimiento, setFechaVencimiento] = useState("");
+
 
   const daysOptions = [
     { label: "Lunes", value: "1" },
@@ -121,6 +124,10 @@ export default function AdminPage() {
       });
 
       const data = await res.json();
+      // Validación de suscripción
+setIsActivo(data.is_active !== false); // por si viene undefined lo asumimos como activo
+setFechaVencimiento(data.expiration_date || ""); // opcional si aún no tiene fecha
+
       setMensaje(res.ok ? "✅ Configuración guardada correctamente." : `❌ ${data.error || "No se pudo guardar."}`);
     } catch {
       setMensaje("❌ Error al conectar con el servidor.");
@@ -147,6 +154,12 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#000000] flex items-center justify-center text-white">
+      {(!isActivo || (fechaVencimiento && new Date(fechaVencimiento) < new Date())) && (
+  <div className="bg-red-700 text-white px-6 py-4 rounded-xl mb-6 max-w-2xl w-full text-center font-semibold border border-red-400">
+    ⚠️ Tu suscripción ha vencido o está inactiva. Por favor contacta con el administrador para renovarla.
+  </div>
+)}
+
       <div className="bg-[#4c2882] p-10 rounded-2xl shadow-md w-full max-w-2xl border border-gray-700">
         <h1 className="text-4xl font-bold text-center mb-10">Panel de Administración</h1>
 

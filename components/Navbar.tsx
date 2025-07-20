@@ -27,9 +27,10 @@ export default function Navbar() {
           <Link href="/" className="hover:text-blue-400">Inicio</Link>
           <Link href="/registro" className="hover:text-blue-400">Registro</Link>
           <Link href="/login" className="hover:text-blue-400">Login</Link>
+          <Link href="/guia" className="hover:text-blue-400">Guia</Link>
           <Link href="/terminos" className="hover:text-blue-400">Términos</Link>
           <Link href="/privacidad" className="hover:text-blue-400">Privacidad</Link>
-          <Link href="/guia" className="hover:text-blue-400">Guia</Link>
+          
         </nav>
 
         <button
@@ -52,9 +53,10 @@ export default function Navbar() {
           <Link href="/" className="block hover:text-blue-400">Inicio</Link>
           <Link href="/registro" className="block hover:text-blue-400">Registro</Link>
           <Link href="/login" className="block hover:text-blue-400">Login</Link>
+          <Link href="/guia" className="block hover:text-blue-400">Guia</Link>
           <Link href="/terminos" className="block hover:text-blue-400">Términos</Link>
           <Link href="/privacidad" className="block hover:text-blue-400">Privacidad</Link>
-          <Link href="/guia" className="block hover:text-blue-400">Guia</Link>
+          
         </div>
       )}
     </header>
