@@ -43,11 +43,13 @@ export default function SuperAdmin() {
       const diasB = fechaB !== null ? Math.ceil((fechaB - hoy) / (1000 * 60 * 60 * 24)) : Infinity;
 
       const prioridad = (dias: number | null) => {
-        if (dias === Infinity) return 3;
-        if (dias < 0) return 0;
-        if (dias <= 5) return 1;
-        return 2;
-      };
+  if (dias === null) return 3; // o el valor que consideres por defecto
+  if (dias === Infinity) return 3;
+  if (dias < 0) return 0;
+  if (dias <= 5) return 1;
+  return 2;
+};
+
 
       return prioridad(diasA) - prioridad(diasB);
     });
