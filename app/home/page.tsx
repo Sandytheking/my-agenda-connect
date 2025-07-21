@@ -9,9 +9,9 @@ export default function HomePage() {
       imagen: "/registro2.webp",
     },
     {
-      titulo: "2. Configura tu disponibilidad",
-      descripcion: "Define horarios, duración de citas y días laborales.",
-      imagen: "/admin2.wepb",
+      titulo: "2. Descarga la app Google Calendar",
+      descripcion: "En la App de Google Calandar podras ver todas tu citas bien organizada.",
+      imagen: "/calendario.webp",
     },
     {
       titulo: "3. Conecta tu Google Calendar",

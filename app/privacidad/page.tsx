@@ -44,7 +44,7 @@ export default function PoliticaPrivacidad() {
       <h2 className="text-xl font-semibold mb-2">Contacto</h2>
       <p className="mb-6">
         Si tienes preguntas sobre esta política, contáctanos a:<br />
-        📧 sandypavonacosta@gmail.com
+        📧 agendacoonectinfo@gmail.com
       </p>
     </section>
   );

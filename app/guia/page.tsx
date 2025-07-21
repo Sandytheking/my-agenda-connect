@@ -12,6 +12,14 @@ const pasos = [
     descripcion:
       "Ingresa a tu panel donde podrás personalizar tus horarios, días laborales y capacidad máxima. Desde aqui podras sincronizar tus citas con Google Calander",
     imagen: "/admin2.webp",
+
+ },
+ {
+    titulo: "3. Descarga la app Google Calendar",
+    descripcion:
+      "En la App de Google Calandar podras ver todas tu citas bien organizada.",
+    imagen: "/calendario.webp",
+ 
   },
   {
     titulo: "3. Conecta tu Google Calendar",

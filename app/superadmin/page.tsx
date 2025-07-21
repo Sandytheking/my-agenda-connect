@@ -19,62 +19,82 @@ export default function SuperAdmin() {
   const [mensaje, setMensaje] = useState('');
   const router = useRouter();
 
-  useEffect(() => {
-    const superadmin = sessionStorage.getItem('superadmin');
-    if (!superadmin) {
-      router.push('/superadmin/login');
-    } else {
-      cargarClientes();
-    }
-  }, []);
+useEffect(() => {
+  const token = sessionStorage.getItem('superadmin_token');
+  if (!token) {
+    router.push('/superadmin/login');
+  } else {
+    cargarClientes();
+  }
+}, []);
 
-  const cargarClientes = async () => {
-    setCargando(true);
-    const res = await fetch('https://api.agenda-connect.com/api/clientes');
-    let data: Cliente[] = await res.json();
 
-    // Ordenar por prioridad visual
-    data = data.sort((a, b) => {
-      const fechaA = a.subscription_valid_until ? new Date(a.subscription_valid_until).getTime() : null;
-      const fechaB = b.subscription_valid_until ? new Date(b.subscription_valid_until).getTime() : null;
-      const hoy = new Date().getTime();
+ const cargarClientes = async () => {
+  setCargando(true);
+  const token = sessionStorage.getItem('superadmin_token');
+  const res = await fetch('https://api.agenda-connect.com/api/clientes', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+  let data = await res.json();
 
-      const diasA = fechaA !== null ? Math.ceil((fechaA - hoy) / (1000 * 60 * 60 * 24)) : Infinity;
-      const diasB = fechaB !== null ? Math.ceil((fechaB - hoy) / (1000 * 60 * 60 * 24)) : Infinity;
+  if (!Array.isArray(data)) {
+    console.error('Respuesta inválida del servidor:', data);
+    setMensaje('⛔ Error al cargar los clientes. Revisa si el token es válido.');
+    setCargando(false);
+    return;
+  }
 
-      const prioridad = (dias: number | null) => {
-  if (dias === null) return 3; // o el valor que consideres por defecto
-  if (dias === Infinity) return 3;
-  if (dias < 0) return 0;
-  if (dias <= 5) return 1;
-  return 2;
+  data = data.sort((a, b) => {
+    const fechaA = a.subscription_valid_until ? new Date(a.subscription_valid_until).getTime() : null;
+    const fechaB = b.subscription_valid_until ? new Date(b.subscription_valid_until).getTime() : null;
+    const hoy = new Date().getTime();
+
+    const diasA = fechaA !== null ? Math.ceil((fechaA - hoy) / (1000 * 60 * 60 * 24)) : Infinity;
+    const diasB = fechaB !== null ? Math.ceil((fechaB - hoy) / (1000 * 60 * 60 * 24)) : Infinity;
+
+    const prioridad = (dias: number | null) => {
+      if (dias === null) return 3;
+      if (dias === Infinity) return 3;
+      if (dias < 0) return 0;
+      if (dias <= 5) return 1;
+      return 2;
+    };
+
+    return prioridad(diasA) - prioridad(diasB);
+  });
+
+  setClientes(data);
+  setCargando(false);
 };
 
 
-      return prioridad(diasA) - prioridad(diasB);
-    });
+ const renovar = async (slug: string) => {
+  const confirmar = confirm(`¿Deseas renovar la suscripción de ${slug} por 30 días?`);
+  if (!confirmar) return;
 
-    setClientes(data);
-    setCargando(false);
-  };
+  const token = sessionStorage.getItem('superadmin_token'); // 👈 Recuperar el token
 
-  const renovar = async (slug: string) => {
-    const confirmar = confirm(`¿Deseas renovar la suscripción de ${slug} por 30 días?`);
-    if (!confirmar) return;
+  const res = await fetch(`https://api.agenda-connect.com/api/clientes/${slug}/renovar`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // 👈 Enviar el token como header
+    },
+  });
 
-    const res = await fetch(`https://api.agenda-connect.com/api/clientes/${slug}/renovar`, {
-      method: 'POST',
-    });
+  const json = await res.json();
 
-    const json = await res.json();
+  if (res.ok) {
+    setMensaje(`✅ ${slug} renovado hasta ${new Date(json.nuevaFecha).toLocaleDateString()}`);
+    cargarClientes();
+  } else {
+    setMensaje(`⛔ Error: ${json.error}`);
+  }
+};
 
-    if (res.ok) {
-      setMensaje(`✅ ${slug} renovado hasta ${new Date(json.nuevaFecha).toLocaleDateString()}`);
-      cargarClientes();
-    } else {
-      setMensaje(`⛔ Error: ${json.error}`);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#0C1A1A] text-white p-6">
