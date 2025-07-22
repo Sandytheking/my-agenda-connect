@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 export default function AdminPage() {
   const router = useRouter();
 
+    const irAgenda = () => {
+    router.push("/agenda");
+  };
+
+
   const [maxPerHour, setMaxPerHour] = useState("1");
   const [maxPerDay, setMaxPerDay] = useState("1");
   const [duration, setDuration] = useState("30");
@@ -97,6 +102,8 @@ export default function AdminPage() {
       "7": "Sunday",
     };
 
+
+
     const diasSeleccionados = workDays
       .filter((day) => !!dayNumberToName[day])
       .map((day) => dayNumberToName[day]);
@@ -152,6 +159,8 @@ setFechaVencimiento(data.expiration_date || ""); // opcional si aún no tiene fe
     window.location.href = `https://api.agenda-connect.com/api/oauth/start?slug=${slug}`;
   };
 
+
+
   return (
     <div className="min-h-screen bg-[#000000] flex items-center justify-center text-white">
       {(!isActivo || (fechaVencimiento && new Date(fechaVencimiento) < new Date())) && (
@@ -159,6 +168,7 @@ setFechaVencimiento(data.expiration_date || ""); // opcional si aún no tiene fe
     ⚠️ Tu suscripción ha vencido o está inactiva. Por favor contacta con el administrador para renovarla.
   </div>
 )}
+
 
       <div className="bg-[#4c2882] p-10 rounded-2xl shadow-md w-full max-w-2xl border border-gray-700">
         <h1 className="text-4xl font-bold text-center mb-10">Panel de Administración</h1>
@@ -242,6 +252,16 @@ setFechaVencimiento(data.expiration_date || ""); // opcional si aún no tiene fe
           >
             <img src="/google-icon2.png" alt="Google" className="w-5 h-5" />
             Google Calendar
+          </button>
+        </div>
+
+  {/* ✅ NUEVO BOTÓN AGREGADO AQUÍ */}
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={irAgenda}
+            className="bg-white text-black font-semibold px-6 py-3 rounded hover:bg-gray-300 transition"
+          >
+            📅 Ver mis citas
           </button>
         </div>
 
