@@ -119,81 +119,116 @@ export default function AgendaPage() {
     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(data, "citas.xlsx");
   };
-
   return (
-    <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
-      <h1 className="text-4xl font-bold mb-4 text-center">
-        Agenda de {nombreNegocio || "Agenda Connect"}
-      </h1>
-
-      <h2 className="text-xl text-white font-semibold text-center mb-6">
-        📅 Citas para {formattedDate}
-      </h2>
-
-      {/* Selector de días */}
-      <div className="flex justify-center gap-2 mb-8 flex-wrap">
-        {[...Array(7)].map((_, i) => {
-          const fecha = new Date();
-          fecha.setDate(fecha.getDate() + i);
-          const dia = fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
-          const label = i === 0 ? "Hoy" : i === 1 ? "Mañana" : dia;
-          return (
-            <button
-              key={i}
-              onClick={() => setSelectedDayOffset(i)}
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                selectedDayOffset === i
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white text-black hover:bg-gray-300'
-              }`}
-            >
-              {label}
-            </button>
-          );
-        })}
+    <>
+      {/* Botón cerrar sesión */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => {
+            sessionStorage.removeItem("slug");
+            window.location.href = "/login";
+          }}
+          className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded"
+        >
+          🔒 Cerrar sesión
+        </button>
       </div>
 
-      {mensaje && (
-        <div className="bg-red-600 text-white px-4 py-3 rounded mb-6 text-center font-medium">
-          {mensaje}
-        </div>
-      )}
+      <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
+        <h1 className="text-4xl font-bold mb-4 text-center">
+          Agenda de {nombreNegocio || "Agenda Connect"}
+        </h1>
 
-      {citasFiltradas.length === 0 ? (
-        <p className="text-center text-gray-300">No hay citas para este día.</p>
-      ) : (
-        <>
-          <div className="flex justify-end gap-4 mb-4">
-            <button
-              onClick={exportToPDF}
-              className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 transition"
-            >
-              📄 Exportar PDF
-            </button>
-            <button
-              onClick={exportToExcel}
-              className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 transition"
-            >
-              📊 Exportar Excel
-            </button>
-          </div>
+        <h2 className="text-xl text-white font-semibold text-center mb-6">
+          📅 Citas para {formattedDate}
+        </h2>
 
-          <div className="grid gap-4">
-            {citasFiltradas.map((cita) => (
-              <div
-                key={cita.id}
-                className="bg-white text-black p-4 rounded shadow-md"
+        {/* Selector de días */}
+        <div className="flex justify-center gap-2 mb-8 flex-wrap">
+          {[...Array(7)].map((_, i) => {
+            const fecha = new Date();
+            fecha.setDate(fecha.getDate() + i);
+            const dia = fecha.toLocaleDateString("es-ES", {
+              weekday: "short",
+              day: "numeric",
+              month: "short",
+            });
+            const label = i === 0 ? "Hoy" : i === 1 ? "Mañana" : dia;
+            return (
+              <button
+                key={i}
+                onClick={() => setSelectedDayOffset(i)}
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  selectedDayOffset === i
+                    ? "bg-purple-600 text-white"
+                    : "bg-white text-black hover:bg-gray-300"
+                }`}
               >
-                <p className="font-bold text-lg">
-                  ⏰ {cita.inicio.slice(11, 16)} - {cita.nombre}
-                </p>
-                <p>📧 {cita.email}</p>
-                <p>📞 {cita.telefono}</p>
-              </div>
-            ))}
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        {mensaje && (
+          <div className="bg-red-600 text-white px-4 py-3 rounded mb-6 text-center font-medium">
+            {mensaje}
           </div>
-        </>
-      )}
+        )}
+
+        {citasFiltradas.length === 0 ? (
+          <p className="text-center text-gray-300">
+            No hay citas para este día.
+          </p>
+        ) : (
+          <>
+            <div className="flex justify-end gap-4 mb-4">
+              <button
+                onClick={exportToPDF}
+                className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 transition"
+              >
+                📄 Exportar PDF
+              </button>
+              <button
+                onClick={exportToExcel}
+                className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 transition"
+              >
+                📊 Exportar Excel
+              </button>
+            </div>
+
+<div className="grid gap-4">
+  {citasFiltradas.map((cita) => (
+    <div
+      key={cita.id}
+      className="bg-[#4c2882] text-white p-4 rounded shadow-md"
+    >
+      <p className="font-bold text-lg">
+        ⏰ {cita.inicio.slice(11, 16)} - {cita.nombre}
+      </p>
+      <p>📧 {cita.email}</p>
+      <p>📞 {cita.telefono}</p>
+
+      {/* Estado de sincronización */}
+      <p
+        className={`mt-2 inline-block px-2 py-1 rounded text-sm font-semibold ${
+          cita.evento_id
+            ? "bg-green-200 text-green-800"
+            : "bg-gray-400 text-yellow-800"
+        }`}
+      >
+        {cita.evento_id
+          ? "✅ Sincronizada con Google Calendar"
+          : "⚠️ No sincronizada"}
+      </p>
     </div>
+  ))}
+</div>
+
+          </>
+        )}
+      </div>
+    </>
   );
 }
+
