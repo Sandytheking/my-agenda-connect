@@ -15,6 +15,7 @@ type Cita = {
   email: string;
   telefono: string;
   inicio: string;
+  evento_id?: string;
 };
 
 export default function AgendaPage() {
