@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 
 export default function RestablecerPasswordPage() {
   const router = useRouter();
-  const router = useRouter();
   const { token } = router.query;
 
   const [newPassword, setNewPassword] = useState('');
