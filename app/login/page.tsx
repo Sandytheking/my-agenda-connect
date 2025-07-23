@@ -86,6 +86,7 @@ export default function Login() {
               : "bg-green-400 text-white hover:bg-green-600"
           }`}
         >
+
           {cargando && (
             <svg
               className="animate-spin mr-2 h-5 w-5 text-white"
@@ -110,6 +111,12 @@ export default function Login() {
           )}
           {cargando ? "Ingresando..." : "Iniciar Sesión"}
         </button>
+        <div className="text-center mt-4">
+  <a href="/olvide-contrasena" className="text-sm text-blue-400 hover:underline">
+    ¿Olvidaste tu contraseña?
+  </a>
+</div>
+
       </form>
     </div>
   );
