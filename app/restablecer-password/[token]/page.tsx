@@ -1,19 +1,12 @@
 // 📁 app/restablecer-password/[token]/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-// ✅ Aquí tipificamos correctamente el parámetro dinámico "token"
-interface PageProps {
-  params: {
-    token: string;
-  };
-}
-
-export default function RestablecerPasswordPage({ params }: PageProps) {
-  const router = useRouter();
+export default function RestablecerPasswordPage({ params }: { params: { token: string } }) {
   const token = params.token;
+  const router = useRouter();
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
