@@ -1,11 +1,12 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
-export default function RestablecerPasswordPage({ params }: { params: { token: string } }) {
+export default function RestablecerPasswordPage() {
   const router = useRouter();
-  const { token } = params;
+  const params = useParams();
+  const token = params?.token as string;
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
