@@ -1,4 +1,5 @@
 // 📁olvide-contrasena.tsx
+'use client';
 import { useState } from "react";
 
 export default function OlvideContrasena() {
@@ -31,7 +32,9 @@ export default function OlvideContrasena() {
     <div className="min-h-screen bg-[#0C1A1A] flex items-center justify-center text-white">
       <div className="w-full max-w-md bg-white text-black p-6 rounded-2xl shadow-lg">
         {enviado ? (
-          <p className="text-center text-green-600">📧 Si el correo está registrado, se ha enviado un enlace para restablecer la contraseña.</p>
+          <p className="text-center text-green-600">
+            📧 Si el correo está registrado, se ha enviado un enlace para restablecer la contraseña.
+          </p>
         ) : (
           <>
             <h2 className="text-xl font-bold mb-4 text-center">¿Olvidaste tu contraseña?</h2>
