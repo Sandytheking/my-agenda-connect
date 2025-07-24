@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function RestablecerPasswordPage({ params }: { params: { token: string } }) {
-  const token = params.token;
+  const { token } = params;
   const router = useRouter();
 
   const [newPassword, setNewPassword] = useState('');
@@ -97,3 +97,4 @@ export default function RestablecerPasswordPage({ params }: { params: { token: s
     </div>
   );
 }
+
