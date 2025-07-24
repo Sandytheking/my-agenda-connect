@@ -1,4 +1,5 @@
-// 📁 /pages/restablecer-password/[token].tsx
+// 📁 restablecer-password
+
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
