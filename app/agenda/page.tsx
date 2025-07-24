@@ -135,6 +135,15 @@ export default function AgendaPage() {
         </button>
       </div>
 
+        <button
+    onClick={() => {
+      window.location.href = "/analiticas";
+    }}
+    className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded"
+  >
+    📊 Ver analíticas
+  </button>
+
       <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
         <h1 className="text-4xl font-bold mb-4 text-center">
           Agenda de {nombreNegocio || "Agenda Connect"}
