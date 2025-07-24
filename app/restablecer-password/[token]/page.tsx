@@ -1,24 +1,23 @@
-// 📁 app/restablecer-password/[token]/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function RestablecerPasswordPage({ params }: { params: { token: string } }) {
-  const { token } = params;
   const router = useRouter();
+  const { token } = params;
 
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [mensaje, setMensaje] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
   const [tokenValido, setTokenValido] = useState(false);
 
   useEffect(() => {
     if (token) {
       fetch(`https://api.agenda-connect.com/api/validar-reset/${token}`)
-        .then(res => res.json())
-        .then(data => setTokenValido(data.valid))
+        .then((res) => res.json())
+        .then((data) => setTokenValido(data.valid))
         .catch(() => setTokenValido(false));
     }
   }, [token]);
@@ -26,41 +25,36 @@ export default function RestablecerPasswordPage({ params }: { params: { token: s
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!token || typeof token !== 'string') {
-      setMensaje('Token inválido');
-      return;
-    }
-
     if (newPassword !== confirmPassword) {
-      setMensaje('Las contraseñas no coinciden');
+      setMensaje("Las contraseñas no coinciden");
       return;
     }
 
     setCargando(true);
     try {
-      const res = await fetch('https://api.agenda-connect.com/api/restablecer-contrasena', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("https://api.agenda-connect.com/api/restablecer-contrasena", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, nuevaContrasena: newPassword }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        setMensaje('✅ Contraseña restablecida. Ahora puedes iniciar sesión.');
-        setTimeout(() => router.push('/login'), 3000);
+        setMensaje("✅ Contraseña restablecida. Ahora puedes iniciar sesión.");
+        setTimeout(() => router.push("/login"), 3000);
       } else {
-        setMensaje(data.error || 'Error al restablecer la contraseña');
+        setMensaje(data.error || "Error al restablecer la contraseña");
       }
     } catch (err) {
-      setMensaje('Error de red al intentar restablecer la contraseña');
+      setMensaje("Error de red al intentar restablecer la contraseña");
     } finally {
       setCargando(false);
     }
   };
 
   if (!tokenValido) {
-    return <div className="text-white p-6">Token no válido o expirado</div>;
+    return <div className="text-white p-6">Token no válido o expirado.</div>;
   }
 
   return (
@@ -89,7 +83,7 @@ export default function RestablecerPasswordPage({ params }: { params: { token: s
             className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
             disabled={cargando}
           >
-            {cargando ? 'Restableciendo...' : 'Guardar nueva contraseña'}
+            {cargando ? "Restableciendo..." : "Guardar nueva contraseña"}
           </button>
         </form>
         {mensaje && <p className="mt-4 text-sm text-white text-center">{mensaje}</p>}
@@ -97,4 +91,3 @@ export default function RestablecerPasswordPage({ params }: { params: { token: s
     </div>
   );
 }
-
