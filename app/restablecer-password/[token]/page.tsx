@@ -4,7 +4,7 @@
 import { useRouter, useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-export default function RestablecerPasswordPage() {
+export default function RestablecerPasswordPage({ params }: { params: { token: string } }) {
   const { token } = useParams(); // Obtienes el token desde la URL
   const router = useRouter();
 
@@ -23,7 +23,7 @@ export default function RestablecerPasswordPage() {
     }
   }, [token]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!token || typeof token !== 'string') {
       setMensaje('Token inválido');
