@@ -36,6 +36,7 @@ type Cliente = {
 };
 
 type AnalyticsData = {
+  totalCitas: number;
   citasPorMes: Record<string, number>;
   sincronizadas: number;
   noSincronizadas: number;
@@ -74,6 +75,7 @@ export default function AnaliticasPage() {
 
 
   const {
+    totalCitas,
     citasPorMes,
     sincronizadas,
     noSincronizadas,
@@ -173,6 +175,7 @@ export default function AnaliticasPage() {
         maintainAspectRatio: false
       }}
       height={250}
+     
     />
   </div>
 </div>
