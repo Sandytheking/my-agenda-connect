@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import * as XLSX from "xlsx";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -105,8 +106,81 @@ export default function AnaliticasPage() {
     doc.save('clientes_recurrentes.pdf');
   };
 
+
+const exportResumenPDF = () => {
+  if (!data) return;
+
+  const totalCitasTexto = totalCitas ?? 0;
+  const sincronizadasTexto = sincronizadas ?? 0;
+  const noSincronizadasTexto = noSincronizadas ?? 0;
+  const clientesTexto = clientesRecurrentes?.length ?? 0;
+  const duracionTexto = duracionPromedio ?? 0;
+  const mesesConCitas = citasPorMes ? Object.keys(citasPorMes).length : 0;
+  const diasConCitas = citasPorDia ? Object.keys(citasPorDia).length : 0;
+
+  const doc = new jsPDF();
+  doc.setFontSize(18);
+  doc.text('Resumen de Analíticas', 14, 20);
+
+  autoTable(doc, {
+    startY: 30,
+    head: [['Métrica', 'Valor']],
+    body: [
+      ['Total de citas recibidas', totalCitasTexto],
+      ['Citas sincronizadas con Google Calendar', sincronizadasTexto],
+      ['Citas no sincronizadas', noSincronizadasTexto],
+      ['Clientes recurrentes (únicos)', clientesTexto],
+      ['Duración promedio de las citas', `${duracionTexto} minutos`],
+      ['Cantidad de meses con citas registradas', mesesConCitas],
+      ['Cantidad de días únicos con citas', diasConCitas],
+    ]
+  });
+
+  doc.save('resumen_analiticas.pdf');
+};
+
+
+
+const exportResumenExcel = () => {
+  if (!data) return;
+
+  const resumen = [
+    ['Métrica', 'Valor'],
+    ['Total de citas recibidas', totalCitas ?? 0],
+    ['Citas sincronizadas con Google Calendar', sincronizadas ?? 0],
+    ['Citas no sincronizadas', noSincronizadas ?? 0],
+    ['Clientes recurrentes (únicos)', clientesRecurrentes?.length ?? 0],
+    ['Duración promedio de las citas', `${duracionPromedio ?? 0} minutos`],
+    ['Cantidad de meses con citas registradas', citasPorMes ? Object.keys(citasPorMes).length : 0],
+    ['Cantidad de días únicos con citas', citasPorDia ? Object.keys(citasPorDia).length : 0],
+  ];
+
+  const worksheet = XLSX.utils.aoa_to_sheet(resumen);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Resumen');
+
+  XLSX.writeFile(workbook, 'resumen_analiticas.xlsx');
+};
+
+
   return (
+
     <div className="bg-[#0C1A1A] min-h-screen text-white p-6">
+    <div className="flex justify-end mb-6 gap-4">
+  <button
+    onClick={exportResumenPDF}
+    className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 text-sm"
+  >
+    📄 Exportar PDF
+  </button>
+  <button
+    onClick={exportResumenExcel}
+    className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 text-sm"
+  >
+    📊 Exportar Excel
+  </button>
+</div>
+
       <h1 className="text-3xl font-bold text-center mb-8">📊 Panel de Analíticas</h1>
 
       {/* RESUMEN */}
@@ -175,7 +249,7 @@ export default function AnaliticasPage() {
         maintainAspectRatio: false
       }}
       height={250}
-     
+
     />
   </div>
 </div>

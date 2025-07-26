@@ -40,7 +40,7 @@ export default function HomePage() {
       <div
       className="min-h-screen bg-cover bg-center text-white"
       style={{
-        backgroundImage: "url('/negro1.webp')",
+        backgroundColor: '#000000',
       }}
     >
       <main className="px-6 py-12">

@@ -1,62 +1,87 @@
 // app/terminos/page.tsx
+'use client';
+
 export default function TerminosPage() {
   return (
     <section className="max-w-3xl mx-auto py-12 px-4 text-white">
       <h1 className="text-3xl font-bold mb-4">Términos y Condiciones de Uso</h1>
-      <p><strong>Última actualización:</strong> 03/07/2025</p>
+      <p><strong>Última actualización:</strong> 24/07/2025</p>
 
       <p className="mt-4">
-        Bienvenido(a) a nuestra plataforma de reservas online. Al utilizar nuestros servicios, aceptas los siguientes Términos y Condiciones, los cuales rigen el uso del sistema tanto por parte de los dueños de negocios (clientes) como de sus usuarios finales (reservantes).
+        Bienvenido(a) a Agenda Connect. Al utilizar nuestros servicios, aceptas los siguientes Términos y Condiciones, los cuales rigen el uso del sistema tanto por parte de los negocios registrados como de los usuarios finales que realizan reservas.
       </p>
 
       <h2 className="text-xl font-semibold mt-8">1. Descripción del servicio</h2>
-      <p>Nuestra plataforma ofrece a negocios locales una solución para gestionar citas, mostrar disponibilidad a sus clientes y sincronizar eventos con su calendario de Google. Cada negocio puede personalizar su enlace de reservas, horarios, duración de citas y otros parámetros operativos.</p>
+      <p>
+        Agenda Connect es una plataforma web que permite a negocios locales gestionar sus reservas, mostrar disponibilidad en línea y sincronizar eventos con Google Calendar. El sistema ofrece un panel administrativo, funciones de visualización de citas, estadísticas de uso y exportación de datos.
+      </p>
 
-      <h2 className="text-xl font-semibold mt-6">2. Responsabilidades del negocio (cliente registrado)</h2>
+      <h2 className="text-xl font-semibold mt-6">2. Responsabilidades del negocio</h2>
       <ul className="list-disc list-inside space-y-1">
-        <li>Es responsabilidad del negocio configurar correctamente su disponibilidad, duración de citas, límites diarios y horarios laborales.</li>
-        <li>El negocio debe asegurar que su cuenta de Google Calendar esté correctamente conectada y sincronizada.</li>
-        <li>El negocio es responsable de brindar atención a los usuarios que reserven mediante el sistema.</li>
-        <li>El enlace personalizado provisto al momento del registro debe ser compartido solo con sus clientes reales.</li>
+        <li>Configurar correctamente disponibilidad, duración de citas y horarios laborales.</li>
+        <li>Conectar su cuenta de Google Calendar si desea sincronización automática.</li>
+        <li>Gestionar adecuadamente las reservas y atender a los usuarios que las generen.</li>
+        <li>Verificar que los datos de su cuenta estén actualizados y correctos.</li>
+        <li>Responsabilizarse por la seguridad de su cuenta y sus credenciales.</li>
       </ul>
 
       <h2 className="text-xl font-semibold mt-6">3. Reservas por parte de los usuarios</h2>
       <ul className="list-disc list-inside space-y-1">
-        <li>Los usuarios deben brindar información verídica al reservar (nombre, correo electrónico, etc.).</li>
-        <li>La disponibilidad mostrada depende de la configuración del negocio y sincronización con su calendario.</li>
-        <li>No garantizamos disponibilidad si hay cambios en el horario del negocio o eventos de Google Calendar.</li>
+        <li>Los usuarios deben proporcionar datos reales y verificables al reservar.</li>
+        <li>La disponibilidad depende de la configuración del negocio y de Google Calendar.</li>
+        <li>La plataforma no se responsabiliza por errores en la sincronización ajenos al sistema.</li>
       </ul>
 
-      <h2 className="text-xl font-semibold mt-6">4. Cancelaciones y modificaciones</h2>
+      <h2 className="text-xl font-semibold mt-6">4. Visualización y analítica de citas</h2>
       <ul className="list-disc list-inside space-y-1">
-        <li>Cada negocio define sus propias políticas de cancelación o reprogramación.</li>
-        <li>El sistema no modifica citas directamente. Los usuarios deben comunicarse con el negocio.</li>
+        <li>El sistema almacena información de las reservas realizadas por los usuarios.</li>
+        <li>Los negocios pueden visualizar las citas en su panel por día y por semana.</li>
+        <li>Se ofrece un módulo de analíticas que presenta datos agregados de uso y citas.</li>
+        <li>Los datos pueden ser exportados por el negocio en formatos PDF o Excel.</li>
       </ul>
 
-      <h2 className="text-xl font-semibold mt-6">5. Uso de datos y privacidad</h2>
+      <h2 className="text-xl font-semibold mt-6">5. Cancelaciones y modificaciones</h2>
       <ul className="list-disc list-inside space-y-1">
-        <li>Solo se recolecta la información necesaria para gestionar la reserva.</li>
-        <li>Los datos no se comparten con terceros ajenos al proceso.</li>
-        <li>El negocio tiene acceso a los datos de sus reservas para fines administrativos.</li>
+        <li>Las políticas de cancelación son responsabilidad exclusiva del negocio.</li>
+        <li>Los usuarios deben comunicarse con el negocio para reprogramar o cancelar citas.</li>
       </ul>
 
-      <h2 className="text-xl font-semibold mt-6">6. Seguridad</h2>
+      <h2 className="text-xl font-semibold mt-6">6. Privacidad y uso de datos</h2>
       <ul className="list-disc list-inside space-y-1">
-        <li>El sistema protege el acceso mediante credenciales y encriptación segura.</li>
-        <li>Los tokens y datos sensibles se almacenan con buenas prácticas de seguridad.</li>
+        <li>Solo recolectamos información necesaria para procesar reservas y mostrar disponibilidad.</li>
+        <li>No compartimos datos con terceros ajenos al funcionamiento del sistema.</li>
+        <li>Los negocios pueden acceder únicamente a los datos de sus propias reservas.</li>
+        <li>Consulta nuestra <a href="/politica" className="text-blue-400 underline">Política de Privacidad</a> para más detalles.</li>
       </ul>
 
-      <h2 className="text-xl font-semibold mt-6">7. Disponibilidad del sistema</h2>
-      <p>Nos esforzamos por mantener el servicio activo, pero no garantizamos disponibilidad continua. No nos responsabilizamos por fallos técnicos ni errores derivados de servicios de terceros como Google Calendar.</p>
+      <h2 className="text-xl font-semibold mt-6">7. Seguridad</h2>
+      <ul className="list-disc list-inside space-y-1">
+        <li>Usamos medidas de seguridad como cifrado HTTPS y almacenamiento seguro de datos.</li>
+        <li>No almacenamos contraseñas en texto plano ni compartimos tokens sensibles.</li>
+      </ul>
 
-      <h2 className="text-xl font-semibold mt-6">8. Cambios en estos Términos</h2>
-      <p>Nos reservamos el derecho de actualizar estos términos en cualquier momento. Notificaremos los cambios a los negocios registrados por correo electrónico o desde su panel.</p>
-
-      <h2 className="text-xl font-semibold mt-6">9. Contacto</h2>
+      <h2 className="text-xl font-semibold mt-6">8. Disponibilidad del sistema</h2>
       <p>
-        Si tienes dudas o necesitas soporte, puedes escribirnos a:{" "}
+        Agenda Connect busca mantener la continuidad del servicio, pero no garantiza disponibilidad absoluta. No nos responsabilizamos por interrupciones causadas por mantenimiento, fallos técnicos o errores de servicios externos como Google Calendar.
+      </p>
+
+      <h2 className="text-xl font-semibold mt-6">9. Suscripciones y pagos</h2>
+      <ul className="list-disc list-inside space-y-1">
+        <li>El sistema puede requerir una suscripción mensual para mantenerse activo.</li>
+        <li>Los negocios deben mantenerse al día con sus pagos para conservar el acceso completo a las funcionalidades.</li>
+        <li>Nos reservamos el derecho de suspender cuentas inactivas o vencidas.</li>
+      </ul>
+
+      <h2 className="text-xl font-semibold mt-6">10. Cambios en estos Términos</h2>
+      <p>
+        Nos reservamos el derecho de modificar estos términos en cualquier momento. Los negocios registrados serán notificados por correo o mediante el panel administrativo.
+      </p>
+
+      <h2 className="text-xl font-semibold mt-6">11. Contacto</h2>
+      <p>
+        Si tienes preguntas sobre estos términos o necesitas soporte, puedes escribirnos a:{" "}
         <a href="mailto:contacto@agenda-connect.com" className="text-blue-400 underline">
-          contacto@agenda-connect.com
+          agendaconnectinfo@gmail.com
         </a>
       </p>
     </section>

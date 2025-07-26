@@ -39,7 +39,7 @@ export default function Login() {
         sessionStorage.setItem("slug", data.slug);
 
         setMensaje("✅ Bienvenido. Redirigiendo...");
-        setTimeout(() => router.push("/admin"), 1500);
+        setTimeout(() => router.push("/admin-avanzado"), 1500);
       }
     } catch (err) {
       setMensaje("❌ Error al conectar con el servidor.");
