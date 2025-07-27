@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { DateTime } from 'luxon';
 
 export default function AdminAvanzado() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function AdminAvanzado() {
   const [mensaje, setMensaje] = useState("");
   const [isActivo, setIsActivo] = useState(true);
   const [fechaVencimiento, setFechaVencimiento] = useState("");
+  
 
   const token = typeof window !== "undefined" && sessionStorage.getItem("accessToken");
   const slug = typeof window !== "undefined" && sessionStorage.getItem("slug");
@@ -41,112 +43,121 @@ export default function AdminAvanzado() {
     Object.entries(dayNumberToName).map(([k, v]) => [v, k])
   );
 
-  useEffect(() => {
-    if (!token || !slug) {
-      router.push("/login");
-      return;
-    }
+useEffect(() => {
+  if (!token || !slug) {
+    router.push("/login");
+    return;
+  }
 
-    const fetchConfig = async () => {
-      try {
-        const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (!res.ok) return setMensaje("❌ Error: " + (data.error || "Error desconocido"));
-
-        setMaxPorHora(String(data.max_per_hour || 1));
-        setMaxPorDia(String(data.max_per_day || 1));
-        setDuracionCita(String(data.duration_minutes || 30));
-
-const porDia: { [key: string]: any } = {};
-
-for (let i = 1; i <= 7; i++) {
-  const diaKey = String(i);
-  const dayName = dayNumberToName[diaKey];
-
-  const configDelDia = data.per_day_config?.[dayName];
-  const isLaborable = configDelDia?.enabled ?? (data.work_days || []).includes(dayName);
-
-  porDia[diaKey] = {
-    activo: isLaborable,
-    entrada: configDelDia?.start ?? data.start_hour ?? "08:00",
-    salida: configDelDia?.end ?? data.end_hour ?? "17:00",
-    almuerzoInicio:
-      configDelDia?.lunch?.start ??
-      (configDelDia?.lunch === null ? "" : "12:00"),
-    almuerzoFin:
-      configDelDia?.lunch?.end ??
-      (configDelDia?.lunch === null ? "" : "13:00"),
-  };
-}
-console.log("✅ configPorDia generado y listo:", porDia);
-setConfigPorDia(porDia);
-
-
-
-console.log("🎯 configPorDia generado:", porDia);
-
-
-        setConfigPorDia(porDia);
-        setIsActivo(data.is_active !== false);
-        setFechaVencimiento(data.expiration_date || "");
-      } catch {
-        setMensaje("❌ Error al conectar con el servidor");
-      }
-    };
-
-    fetchConfig();
-  }, []);
-
-  const guardarConfiguracion = async () => {
-    if (!token || !slug) return;
-
-    const per_day_config = Object.entries(configPorDia).reduce((acc, [key, val]) => {
-      acc[dayNumberToName[key]] = {
-        start: val.entrada,
-        end: val.salida,
-        enabled: val.activo,
-        lunch:
-          val.almuerzoInicio && val.almuerzoFin
-            ? { start: val.almuerzoInicio, end: val.almuerzoFin }
-            : null,
-      };
-      return acc;
-    }, {} as any);
-
-    const work_days = Object.entries(configPorDia)
-      .filter(([_, val]) => val.activo)
-      .map(([key]) => dayNumberToName[key]);
-
+  const fetchConfig = async () => {
+    console.log("🚀 Iniciando fetchConfig...");
     try {
       const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          max_per_day: Number(maxPorDia),
-          max_per_hour: Number(maxPorHora),
-          duration_minutes: Number(duracionCita),
-          work_days,
-          per_day_config,
-        }),
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = await res.json();
-      console.log("✅ data recibida del backend:", data); 
+      console.log("🔍 config recibido del backend:", data);
+
+      if (!res.ok) {
+        setMensaje("❌ Error: " + (data.error || "Error desconocido"));
+        return;
+      }
+
+      setMaxPorHora(String(data.max_per_hour || 1));
+      setMaxPorDia(String(data.max_per_day || 1));
+      setDuracionCita(String(data.duration_minutes || 30));
+
+      const porDia: { [key: string]: any } = {};
+
+      for (let i = 1; i <= 7; i++) {
+        const diaKey = String(i);
+        const dayName = dayNumberToName[diaKey];
+        const configDelDia = data.per_day_config?.[dayName];
+        const isLaborable = configDelDia?.enabled ?? (data.work_days || []).includes(dayName);
+
+        porDia[diaKey] = {
+          activo: isLaborable,
+          entrada: configDelDia?.start ?? data.start_hour ?? "08:00",
+          salida: configDelDia?.end ?? data.end_hour ?? "17:00",
+          almuerzoInicio:
+            configDelDia?.lunch?.start ?? (configDelDia?.lunch === null ? "" : "12:00"),
+          almuerzoFin:
+            configDelDia?.lunch?.end ?? (configDelDia?.lunch === null ? "" : "13:00"),
+        };
+      }
+
+      console.log("✅ configPorDia generado y listo:", porDia);
+
+      setConfigPorDia(porDia);
       setIsActivo(data.is_active !== false);
       setFechaVencimiento(data.expiration_date || "");
-
-      setMensaje(res.ok ? "✅ Configuración guardada correctamente." : `❌ ${data.error || "No se pudo guardar."}`);
-    } catch {
-      setMensaje("❌ Error al conectar con el servidor.");
+    } catch (error) {
+      console.error("❌ Error al conectar con el servidor:", error);
+      setMensaje("❌ Error al conectar con el servidor");
     }
-
-    setTimeout(() => setMensaje(""), 8000);
   };
+
+  fetchConfig();
+}, []);
+
+  const guardarConfiguracion = async () => {
+  if (!token || !slug) return;
+
+  const per_day_config = Object.entries(configPorDia).reduce((acc, [key, val]) => {
+    acc[dayNumberToName[key]] = {
+      start: val.entrada,
+      end: val.salida,
+      enabled: val.activo,
+      lunch:
+  val.almuerzoInicio?.trim() && val.almuerzoFin?.trim()
+    ? { start: val.almuerzoInicio.trim(), end: val.almuerzoFin.trim() }
+    : null,
+
+    };
+    return acc;
+  }, {} as any);
+
+  const work_days = Object.entries(configPorDia)
+    .filter(([_, val]) => val.activo)
+    .map(([key]) => dayNumberToName[key]);
+
+  // ✅ MOSTRAR EXACTAMENTE LO QUE SE ENVÍA AL BACKEND
+  const payload = {
+    max_per_day: Number(maxPorDia),
+    max_per_hour: Number(maxPorHora),
+    duration_minutes: Number(duracionCita),
+    work_days,
+    per_day_config,
+    activo: isActivo,
+  };
+
+  console.log("📤 Enviando configuración al backend:", payload);
+
+  try {
+    const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    console.log("✅ data recibida del backend:", data); 
+
+    setIsActivo(data.is_active !== false);
+    setFechaVencimiento(data.expiration_date || "");
+
+    setMensaje(res.ok ? "✅ Configuración guardada correctamente." : `❌ ${data.error || "No se pudo guardar."}`);
+  } catch {
+    setMensaje("❌ Error al conectar con el servidor.");
+  }
+
+  setTimeout(() => setMensaje(""), 8000);
+};
+
 
   const conectarGoogle = () => {
     if (!slug) return;
@@ -228,27 +239,30 @@ if (Object.keys(configPorDia).length === 0) {
                       type="time"
                       value={configPorDia[dia.key]?.entrada}
                       onChange={(e) =>
+
                         setConfigPorDia((prev) => ({
                           ...prev,
                           [dia.key]: { ...prev[dia.key], entrada: e.target.value },
                         }))
                       }
-                      className="w-full px-2 py-1 rounded"
+                      className="text-green-500 bg-gray-900 border border-gray-700 px-2 py-1 rounded"
+
                     />
                   </div>
                   <div>
-                    <label className="text-white text-sm">Salida</label>
-                    <input
-                      type="time"
-                      value={configPorDia[dia.key]?.salida}
-                      onChange={(e) =>
-                        setConfigPorDia((prev) => ({
-                          ...prev,
-                          [dia.key]: { ...prev[dia.key], salida: e.target.value },
-                        }))
-                      }
-                      className="w-full px-2 py-1 rounded"
-                    />
+                   <label className="text-white text-sm">Entrada</label>
+<input
+  type="time"
+  value={configPorDia[dia.key]?.salida}
+  onChange={(e) =>
+    setConfigPorDia((prev) => ({
+      ...prev,
+      [dia.key]: { ...prev[dia.key], salida: e.target.value },
+    }))
+  }
+  className="text-green-500 bg-gray-900 border border-gray-700 px-2 py-1 rounded"
+/>
+
                   </div>
                   <div>
                     <label className="text-white text-sm">Almuerzo (Inicio)</label>
@@ -261,7 +275,7 @@ if (Object.keys(configPorDia).length === 0) {
                           [dia.key]: { ...prev[dia.key], almuerzoInicio: e.target.value },
                         }))
                       }
-                      className="w-full px-2 py-1 rounded"
+                      className="text-yellow-500 bg-gray-900 border border-yellow-700 px-2 py-1 rounded"
                     />
                   </div>
                   <div>
@@ -275,7 +289,7 @@ if (Object.keys(configPorDia).length === 0) {
                           [dia.key]: { ...prev[dia.key], almuerzoFin: e.target.value },
                         }))
                       }
-                      className="w-full px-2 py-1 rounded"
+                      className="text-yellow-500 bg-gray-900 border border-yellow-700 px-2 py-1 rounded"
                     />
                   </div>
                 </div>
@@ -287,14 +301,14 @@ if (Object.keys(configPorDia).length === 0) {
         <div className="flex justify-center mt-6 gap-4">
           <button
             onClick={conectarGoogle}
-            className="bg-white text-black font-semibold px-6 py-2 rounded-full flex items-center gap-2"
+            className="bg-white text-black font-semibold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-yellow-500"
           >
             <img src="/google-icon2.png" className="w-5 h-5" alt="Google" />
             Google Calendar
           </button>
           <button
             onClick={irAgenda}
-            className="bg-white text-black font-semibold px-6 py-2 rounded hover:bg-gray-300"
+            className="bg-white text-black font-semibold px-6 py-2 rounded-full hover:bg-green-400"
           >
             📅 Ver mis citas
           </button>
@@ -305,13 +319,13 @@ if (Object.keys(configPorDia).length === 0) {
         <div className="mt-6 flex flex-col md:flex-row justify-center gap-4">
           <button
             onClick={guardarConfiguracion}
-            className="bg-green-500 text-black font-semibold py-2 px-6 rounded hover:bg-green-600 transition"
+            className="bg-green-500 text-black font-semibold py-2 px-6 rounded-full hover:bg-green-600 transition"
           >
             Guardar
           </button>
           <button
             onClick={desconectar}
-            className="bg-red-700 text-white font-semibold py-2 px-6 rounded hover:bg-red-800 transition"
+            className="bg-red-700 text-white font-semibold py-2 px-6 rounded-full hover:bg-red-800 transition"
           >
             Cerrar sesión
           </button>

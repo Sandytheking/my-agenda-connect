@@ -8,6 +8,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { DateTime } from "luxon";
 
 type Cita = {
   id: string;
@@ -28,31 +29,28 @@ export default function AgendaPage() {
   const [selectedDayOffset, setSelectedDayOffset] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
 
-  // Proteger la ruta si no hay slug en sessionStorage
   useEffect(() => {
     const storedSlug = sessionStorage.getItem("slug");
     if (!storedSlug) {
-      router.push("/login"); // redirigir a login si no hay sesión
+      router.push("/login");
     } else {
       setSlug(storedSlug);
     }
   }, []);
 
-  // Calcular la fecha legible del día seleccionado
   useEffect(() => {
     const date = new Date();
     date.setDate(date.getDate() + selectedDayOffset);
     const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     };
-    const dateString = date.toLocaleDateString('es-ES', options);
+    const dateString = date.toLocaleDateString("es-ES", options);
     setFormattedDate(dateString.charAt(0).toUpperCase() + dateString.slice(1));
   }, [selectedDayOffset]);
 
-  // Cargar citas y nombre del negocio
   useEffect(() => {
     if (!slug) return;
 
@@ -76,18 +74,17 @@ export default function AgendaPage() {
       });
   }, [slug]);
 
-  // Filtrar citas del día seleccionado
   const citasFiltradas = citas.filter((cita) => {
     const citaDate = new Date(cita.inicio);
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     citaDate.setHours(0, 0, 0, 0);
 
-    const diffInDays = Math.floor((citaDate.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
+    const diffInDays =
+      Math.floor((citaDate.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
     return diffInDays === selectedDayOffset;
   });
 
-  // Exportar PDF
   const exportToPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
@@ -95,7 +92,9 @@ export default function AgendaPage() {
 
     const tableColumn = ["Hora", "Nombre", "Email", "Teléfono"];
     const tableRows = citasFiltradas.map((cita) => [
-      cita.inicio.slice(11, 16),
+      DateTime.fromISO(cita.inicio, { zone: 'utc' })
+        .setZone('America/Santo_Domingo')
+        .toFormat('hh:mm a'),
       cita.nombre,
       cita.email,
       cita.telefono,
@@ -111,18 +110,22 @@ export default function AgendaPage() {
     doc.save("citas.pdf");
   };
 
-  // Exportar Excel
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(citasFiltradas);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Citas");
-    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const data = new Blob([excelBuffer], {
+      type: "application/octet-stream",
+    });
     saveAs(data, "citas.xlsx");
   };
+
   return (
     <>
-      {/* Botón cerrar sesión */}
       <div className="flex justify-end mb-4">
         <button
           onClick={() => {
@@ -135,14 +138,16 @@ export default function AgendaPage() {
         </button>
       </div>
 
-        <button
-    onClick={() => {
-      window.location.href = "/analiticas";
-    }}
-    className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded"
-  >
-    📊 Ver analíticas
-  </button>
+<div className="flex justify-left mb-4">
+      <button
+        onClick={() => {
+          window.location.href = "/analiticas";
+        }}
+        className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded"
+      >
+        📊 Ver analíticas
+      </button>
+      </div>
 
       <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
         <h1 className="text-4xl font-bold mb-4 text-center">
@@ -153,7 +158,6 @@ export default function AgendaPage() {
           📅 Citas para {formattedDate}
         </h2>
 
-        {/* Selector de días */}
         <div className="flex justify-center gap-2 mb-8 flex-wrap">
           {[...Array(7)].map((_, i) => {
             const fecha = new Date();
@@ -207,38 +211,38 @@ export default function AgendaPage() {
               </button>
             </div>
 
-<div className="grid gap-4">
-  {citasFiltradas.map((cita) => (
-    <div
-      key={cita.id}
-      className="bg-[#4c2882] text-white p-4 rounded shadow-md"
-    >
-      <p className="font-bold text-lg">
-        ⏰ {cita.inicio.slice(11, 16)} - {cita.nombre}
-      </p>
-      <p>📧 {cita.email}</p>
-      <p>📞 {cita.telefono}</p>
-
-      {/* Estado de sincronización */}
-      <p
-        className={`mt-2 inline-block px-2 py-1 rounded text-sm font-semibold ${
-          cita.evento_id
-            ? "bg-green-200 text-green-800"
-            : "bg-gray-400 text-yellow-800"
-        }`}
-      >
-        {cita.evento_id
-          ? "✅ Sincronizada con Google Calendar"
-          : "⚠️ No sincronizada"}
-      </p>
-    </div>
-  ))}
-</div>
-
+            <div className="grid gap-4">
+              {citasFiltradas.map((cita) => (
+                <div
+                  key={cita.id}
+                  className="bg-[#4c2882] text-white p-4 rounded shadow-md"
+                >
+                  <p className="font-bold text-lg">
+                    ⏰{" "}
+                    {DateTime.fromISO(cita.inicio, { zone: "utc" })
+                      .setZone("America/Santo_Domingo")
+                      .toFormat("hh:mm a")}{" "}
+                    - {cita.nombre}
+                  </p>
+                  <p>📧 {cita.email}</p>
+                  <p>📞 {cita.telefono}</p>
+                  <p
+                    className={`mt-2 inline-block px-2 py-1 rounded text-sm font-semibold ${
+                      cita.evento_id
+                        ? "bg-gray-800 text-green-600"
+                        : "bg-gray-800 text-yellow-400"
+                    }`}
+                  >
+                    {cita.evento_id
+                      ? "✅ Sincronizada con Google Calendar"
+                      : "⚠️ No sincronizada"}
+                  </p>
+                </div>
+              ))}
+            </div>
           </>
         )}
       </div>
     </>
   );
 }
-
