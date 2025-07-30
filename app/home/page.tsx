@@ -70,26 +70,28 @@ export default function HomePage() {
               </p>
             </motion.div>
 
-            <motion.div
-              className="lg:w-1/2 flex justify-center relative"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              {/* Glow efecto detrás de la imagen */}
-              <div className="absolute w-[700px] h-[500px] bg-purple-600 opacity-20 blur-[120px] rounded-full z-0" />
+ <motion.div
+  className="lg:w-1/2 flex justify-center relative"
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.8, delay: 0.2 }}
+>
+  {/* Glow efecto detrás de la imagen */}
+  <div className="absolute w-[700px] h-[500px] bg-purple-600 opacity-20 blur-[120px] rounded-full z-0" />
 
-              {/* Imagen con carrusel */}
-              <div className="relative w-full max-w-[640px] h-[400px] overflow-hidden rounded-3xl shadow-2xl border border-white/10 bg-white/5 z-10">
-                <Image
-                  src={images[current]}
-                  alt="Vista previa"
-                  fill
-                  className="object-cover transition-opacity duration-700 ease-in-out rounded-3xl"
-                />
-              </div>
-            </motion.div>
+  {/* Imagen con carrusel más grande */}
+  <div className="relative w-full max-w-xl aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-3xl shadow-2xl border border-white/10 bg-white/5 z-10">
+    <Image
+      src={images[current]}
+      alt="Vista previa"
+      fill
+      className="object-cover transition-opacity duration-700 ease-in-out rounded-3xl"
+    />
+  </div>
+</motion.div>
+
+
           </section>
 
           {/* 📊 Comparativa */}

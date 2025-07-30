@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 const pasos = [
   {
@@ -28,11 +27,12 @@ const pasos = [
       "Sincroniza automáticamente tus reservas con tu calendario de Google en solo un clic.",
     imagen: "/sinc.webp",
   },
+
   {
-    titulo: "5. Personaliza tu mensaje de WhatsApp",
+    titulo: "5. Panel de Citas",
     descripcion:
-      "Crea un mensaje automático con el link para que tus clientes agenden directamente desde WhatsApp.",
-    imagen: "/mensaj.webp",
+      "En este panel podrás ver todas tus citas agendadas, así como aquellas que hayan sido canceladas.",
+    imagen: "/panelcitas.webp",
   },
   {
     titulo: "6. Recibe notificaciones automáticas",
@@ -52,26 +52,16 @@ export default function GuiaPage() {
   return (
     <div className="min-h-screen bg-black text-white px-4 py-20">
       <div className="max-w-6xl mx-auto">
-        <motion.h1
-          className="text-4xl md:text-5xl font-bold text-center mb-16 text-purple-400"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-16 text-purple-400">
           Guía paso a paso para comenzar
-        </motion.h1>
+        </h1>
 
         {/* Carrusel en móvil */}
         <div className="block md:hidden overflow-x-auto snap-x snap-mandatory flex space-x-6 pb-8">
           {pasos.map((paso, index) => (
-            <motion.div
+            <div
               key={index}
               className="min-w-[85%] bg-white/5 rounded-3xl p-6 snap-center shrink-0 border border-white/10 shadow-xl relative z-10"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               {/* Glow detrás de la imagen */}
               <div className="relative w-full mb-4">
@@ -91,22 +81,18 @@ export default function GuiaPage() {
               <p className="text-white/90 text-base leading-relaxed">
                 {paso.descripcion}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Layout normal para desktop */}
         <div className="hidden md:block">
           {pasos.map((paso, index) => (
-            <motion.div
+            <div
               key={index}
               className={`flex flex-col md:flex-row items-center gap-10 mb-20 ${
                 index % 2 === 1 ? "md:flex-row-reverse" : ""
               }`}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <div className="md:w-1/2 relative">
                 {/* Glow detrás de la imagen */}
@@ -128,7 +114,7 @@ export default function GuiaPage() {
                   {paso.descripcion}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
