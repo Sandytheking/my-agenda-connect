@@ -27,7 +27,6 @@ const pasos = [
       "Sincroniza automáticamente tus reservas con tu calendario de Google en solo un clic.",
     imagen: "/sinc.webp",
   },
-
   {
     titulo: "5. Panel de Citas",
     descripcion:
@@ -56,67 +55,34 @@ export default function GuiaPage() {
           Guía paso a paso para comenzar
         </h1>
 
-        {/* Carrusel en móvil */}
-        <div className="block md:hidden overflow-x-auto snap-x snap-mandatory flex space-x-6 pb-8">
-          {pasos.map((paso, index) => (
-            <div
-              key={index}
-              className="min-w-[85%] bg-white/5 rounded-3xl p-6 snap-center shrink-0 border border-white/10 shadow-xl relative z-10"
-            >
-              {/* Glow detrás de la imagen */}
-              <div className="relative w-full mb-4">
-                <div className="absolute inset-0 rounded-2xl bg-purple-500 blur-2xl opacity-20 animate-pulse" />
-                <Image
-                  src={paso.imagen}
-                  alt={paso.titulo}
-                  width={700}
-                  height={400}
-                  className="rounded-2xl relative z-10"
-                />
-              </div>
+        {pasos.map((paso, index) => (
+          <div
+            key={index}
+            className={`flex flex-col md:flex-row items-center gap-10 mb-20 ${
+              index % 2 === 1 ? "md:flex-row-reverse" : ""
+            }`}
+          >
+            <div className="w-full md:w-1/2 relative">
+              <div className="absolute inset-0 rounded-3xl bg-purple-500 blur-2xl opacity-20 animate-pulse" />
+              <Image
+                src={paso.imagen}
+                alt={paso.titulo}
+                width={800}
+                height={500}
+                className="rounded-3xl shadow-2xl border border-white/10 relative z-10 w-full h-auto object-cover"
+              />
+            </div>
 
-              <h2 className="text-xl font-semibold text-blue-400 mb-2">
+            <div className="w-full md:w-1/2 px-2 md:px-0">
+              <h2 className="text-xl md:text-3xl font-semibold text-blue-400 mb-4">
                 {paso.titulo}
               </h2>
-              <p className="text-white/90 text-base leading-relaxed">
+              <p className="text-base md:text-lg text-white/90 leading-relaxed">
                 {paso.descripcion}
               </p>
             </div>
-          ))}
-        </div>
-
-        {/* Layout normal para desktop */}
-        <div className="hidden md:block">
-          {pasos.map((paso, index) => (
-            <div
-              key={index}
-              className={`flex flex-col md:flex-row items-center gap-10 mb-20 ${
-                index % 2 === 1 ? "md:flex-row-reverse" : ""
-              }`}
-            >
-              <div className="md:w-1/2 relative">
-                {/* Glow detrás de la imagen */}
-                <div className="absolute inset-0 rounded-3xl bg-purple-500 blur-2xl opacity-20 animate-pulse" />
-                <Image
-                  src={paso.imagen}
-                  alt={paso.titulo}
-                  width={800}
-                  height={500}
-                  className="rounded-3xl shadow-2xl border border-white/10 relative z-10"
-                />
-              </div>
-
-              <div className="md:w-1/2">
-                <h2 className="text-2xl md:text-3xl font-semibold text-blue-400 mb-4">
-                  {paso.titulo}
-                </h2>
-                <p className="text-lg text-white/90 leading-relaxed">
-                  {paso.descripcion}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
