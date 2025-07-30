@@ -17,6 +17,7 @@ type Cita = {
   telefono: string;
   inicio: string;
   evento_id?: string;
+  cancelada?: boolean;
 };
 
 export default function AgendaPage() {
