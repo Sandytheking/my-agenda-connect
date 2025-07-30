@@ -1,127 +1,268 @@
+
+//HomePage
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { MessageCircleMore, Star, Calendar, HelpCircle } from "lucide-react";
+
+const images = [
+  "/analitica.webp",
+  "/adminavan.webp",
+  "/panelcitas.webp"
+];
 
 export default function HomePage() {
-  const pasos = [
-    {
-      titulo: "1. Regístrate",
-      descripcion: "Crea una cuenta y personaliza tu enlace de reservas.",
-      imagen: "/registro2.webp",
-    },
-    {
-      titulo: "2. Descarga la app Google Calendar",
-      descripcion: "En la App de Google Calandar podras ver todas tu citas bien organizada.",
-      imagen: "/calendario.webp",
-    },
-    {
-      titulo: "3. Conecta tu Google Calendar",
-      descripcion: "Sincroniza automáticamente tus reservas con tu calendario.",
-      imagen: "/sinc.webp",
-    },
-    {
-      titulo: "4. Comparte tu enlace",
-      descripcion: "Tus clientes podrán reservar fácilmente desde cualquier dispositivo.",
-      imagen: "/mensaj.webp",
-    },
-    {
+  const [current, setCurrent] = useState(0);
 
-       titulo: "4. Notificaciones",
-      descripcion: "Notificaciones a tu telefono cada vez que agenden una cita.",
-      imagen: "/notificacion2.webp",
-    },
-    {
-      titulo: "5. Gestiona desde tu panel",
-      descripcion: "Consulta y ajusta tu configuración en todo momento.",
-      imagen: "/admin2.webp",
-    },
-  ];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-      <div
-      className="min-h-screen bg-cover bg-center text-white"
-      style={{
-        backgroundColor: '#000000',
-      }}
-    >
-      <main className="px-6 py-12">
-        <div className="max-w-6xl mx-auto">
-          {/* Encabezado */}
-          <section className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-purple-400 mb-4">Agenda Connect</h1>
-            <p className="text-xl text-white/90">
-              Simplifica la gestión de tus citas. Sincroniza automáticamente con Google Calendar,
-              personaliza tus horarios y recibe reservas en segundos.
-            </p>
-          </section>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* 🌌 Partículas */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute w-[600px] h-[600px] bg-purple-600 opacity-20 blur-[160px] rounded-full top-[-150px] left-[-200px] animate-pulse" />
+        <div className="absolute w-[500px] h-[500px] bg-blue-500 opacity-20 blur-[140px] rounded-full top-[300px] right-[-150px] animate-ping" />
+      </div>
 
-          {/* Sección de pasos */}
-          <section className="mb-20">
-            <h2 className="text-3xl font-semibold text-blue-300 text-center mb-10">
-              ¿Cómo funciona Agenda Connect?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {pasos.map((paso, index) => (
-                <div
-                  key={index}
-                  className="bg-purple-500/55 p-6 rounded-xl shadow-md flex flex-col items-center text-center transition duration-500 hover:scale-105"
+     
+
+      <main className="relative z-10 px-6 py-12">
+        <div className="max-w-7xl mx-auto">
+          {/* 🎯 HERO */}
+          <section className="flex flex-col lg:flex-row items-center gap-12 mb-28">
+            <motion.div
+              className="lg:w-1/2 text-center lg:text-left"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-5xl font-bold text-purple-400 mb-4">
+                Agenda Connect
+              </h1>
+              <p className="text-xl text-white/90 mb-6">
+                Gestiona tus reservas de forma inteligente. Agenda Connect sincroniza tus citas con Google Calendar, envía notificaciones instantáneas y te ofrece un panel administrativo para tener el control total.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                <Link
+                  href="/registro"
+                  className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg transition"
                 >
-                  <Image
-                    src={paso.imagen}
-                    alt={paso.titulo}
-                    width={200}
-                    height={120}
-                    className="mb-4 rounded-md"
-                  />
-                  <h3 className="text-lg font-bold text-blue-400 mb-2">{paso.titulo}</h3>
-                  <p className="text-white/90 text-sm">{paso.descripcion}</p>
-                </div>
-              ))}
+                  🚀 Comenzar gratis
+                </Link>
+                <Link
+                  href="/login"
+                  className="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition"
+                >
+                  🔐 Ya tengo cuenta
+                </Link>
+              </div>
+              <p className="text-green-400 font-semibold mt-4">
+  
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="lg:w-1/2 flex justify-center relative"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {/* Glow efecto detrás de la imagen */}
+              <div className="absolute w-[700px] h-[500px] bg-purple-600 opacity-20 blur-[120px] rounded-full z-0" />
+
+              {/* Imagen con carrusel */}
+              <div className="relative w-full max-w-[640px] h-[400px] overflow-hidden rounded-3xl shadow-2xl border border-white/10 bg-white/5 z-10">
+                <Image
+                  src={images[current]}
+                  alt="Vista previa"
+                  fill
+                  className="object-cover transition-opacity duration-700 ease-in-out rounded-3xl"
+                />
+              </div>
+            </motion.div>
+          </section>
+
+          {/* 📊 Comparativa */}
+          <motion.section
+            className="bg-white/5 p-6 rounded-xl shadow-md mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <h2 className="text-2xl font-bold text-blue-300 mb-4 text-center flex justify-center items-center gap-2">
+              <Star className="w-5 h-5 text-yellow-400" />
+              ¿Por qué elegir Agenda Connect?
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-white/90 text-sm border border-white/10">
+                <thead>
+                  <tr className="bg-purple-700 text-white">
+                    <th className="p-3 border border-white/10">Características</th>
+                    <th className="p-3 border border-white/10">Agenda Connect</th>
+                    <th className="p-3 border border-white/10">Google Calendar</th>
+                    <th className="p-3 border border-white/10">Competidores</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["Citas ilimitadas", "✅", "❌", "❌"],
+                    ["Panel administrativo", "✅", "❌", "✅"],
+                    ["Integración WhatsApp", "🛠️ En camino", "❌", "❌"],
+                    ["Notificaciones automáticas", "✅", "✅", "✅"],
+                    ["Soporte en español", "✅", "❌", "✅"],
+                    ["Exportar citas a Excel/PDF", "✅", "❌", "❌"],
+                    ["Panel de analíticas de citas", "✅", "❌", "❌"]
+                  ].map((row, i) => (
+                    <tr key={i} className={i % 2 === 0 ? "bg-white/5" : "bg-white/10"}>
+                      {row.map((cell, j) => (
+                        <td key={j} className="p-3 text-center border border-white/10">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </section>
+          </motion.section>
 
-          {/* Beneficios */}
-          <section className="bg-black p-8 rounded-xl shadow-md mb-16">
-            <h2 className="text-3xl font-semibold text-blue-300 mb-6">Beneficios de usar Agenda Connect</h2>
-            <ul className="list-disc list-inside space-y-3 text-white/90">
-              <li>Crea tu propio enlace de reservas personalizado.</li>
-              <li>Configura tu horario, duración de citas y días laborales.</li>
-              <li>Sincronización automática con Google Calendar.</li>
-              <li>Recibe notificaciones por correo y al instante.</li>
-              <li>Panel de administración fácil de usar para negocios.</li>
-            </ul>
-          </section>
+{/* 🚀 Cómo funciona - Sección moderna tipo timeline centrada */}
+<section className="mb-28 px-4">
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-3xl font-bold text-center text-blue-400 mb-12">
+      ¿Cómo funciona Agenda Connect?
+    </h2>
 
-          {/* Acciones */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center mb-16">
-            <Link
-              href="/registro"
-              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg transition"
-            >
-              Registrarse
-            </Link>
-            <Link
-              href="/login"
-              className="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition"
-            >
-              Iniciar sesión
-            </Link>
-            <Link
-              href="/terminos"
-              className="text-blue-400 underline hover:text-blue-300 col-span-1 sm:col-span-2"
-            >
-              Términos y Condiciones
-            </Link>
-            <Link
-              href="/privacidad"
-              className="text-blue-400 underline hover:text-blue-300 col-span-1 sm:col-span-2"
-            >
-              Política de Privacidad
-            </Link>
-          </section>
+    <div className="relative">
+      {/* Línea central decorativa */}
+      <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-white/10" />
 
-          {/* FAQ */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-semibold text-blue-300 mb-4">Preguntas Frecuentes</h2>
+      <div className="flex flex-col md:flex-row gap-8 overflow-x-auto md:overflow-visible scroll-smooth pb-4 md:pb-0 justify-center px-4">
+
+        {[
+          {
+            titulo: "1. Regístrate",
+            descripcion: "Crea tu cuenta y personaliza tu enlace de reservas.",
+            imagen: "/registro2.webp",
+          },
+          {
+            titulo: "2. Conecta tu Google Calendar",
+            descripcion: "Sincroniza automáticamente tus reservas con tu calendario.",
+            imagen: "/sinc.webp",
+          },
+          {
+            titulo: "3. Recibe citas y notificaciones",
+            descripcion: "Tus clientes agendan y tú recibes alertas al instante.",
+            imagen: "/notificacion2.webp",
+          },
+          {
+            titulo: "4. Consulta en tu panel o app",
+            descripcion: "Visualiza y exporta tus citas desde el panel o Google Calendar.",
+            imagen: "/admin2.webp",
+          },
+          {
+            titulo: "5. Comparte tu enlace",
+            descripcion: "Tus clientes reservan fácil desde cualquier dispositivo.",
+            imagen: "/mensaj.webp",
+          },
+        ].map((paso, index) => (
+          <div
+            key={index}
+            className="relative flex-shrink-0 md:flex-1 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-blue-500/30 transition-transform hover:scale-[1.03] min-w-[280px]"
+          >
+            {/* Glow animado detrás */}
+            <div className="absolute -inset-1 rounded-2xl bg-purple-600 blur-xl opacity-10 z-0 animate-pulse" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Image
+                src={paso.imagen}
+                alt={paso.titulo}
+                width={120}
+                height={80}
+                className="rounded-lg mb-4"
+              />
+              <h3 className="text-lg font-bold text-purple-300 mb-2">{paso.titulo}</h3>
+              <p className="text-white/90 text-sm">{paso.descripcion}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ⭐ Testimonios - Sección profesional */}
+<section className="py-20 px-4 max-w-6xl mx-auto">
+  <h2 className="text-3xl font-bold text-center text-blue-400 mb-12">
+    Lo que dicen nuestros usuarios
+  </h2>
+
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    {[
+      {
+        nombre: "Carlos M.",
+        comentario: "Agenda Connect ha transformado la forma en que gestiono mis citas. Fácil, rápido y profesional.",
+        cargo: "Coach Personal",
+        imagen: "/hombre.webp",
+      },
+      {
+        nombre: "Laura P.",
+        comentario: "Mis clientes están felices, y yo también. Las notificaciones y el panel son súper útiles.",
+        cargo: "Esteticista",
+        imagen: "/mujer.webp",
+      },
+      {
+        nombre: "Andrés R.",
+        comentario: "Desde que uso Agenda Connect, tengo más tiempo libre y menos estrés. ¡Recomendado 100%!",
+        cargo: "Nutricionista",
+        imagen: "/hombre1.webp",
+      },
+    ].map((testimonio, i) => (
+      <div
+        key={i}
+        className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-md hover:shadow-purple-500/30 transition duration-300"
+      >
+        <div className="flex items-center gap-4 mb-4">
+          <img
+            src={testimonio.imagen}
+            alt={testimonio.nombre}
+            className="w-12 h-12 rounded-full border border-purple-400 object-cover"
+          />
+          <div>
+            <p className="font-semibold text-purple-300">{testimonio.nombre}</p>
+            <p className="text-sm text-white/70">{testimonio.cargo}</p>
+          </div>
+        </div>
+        <p className="text-white/90 text-sm italic">“{testimonio.comentario}”</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+
+
+          {/* ❓ FAQs */}
+          <motion.section
+            className="mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-2xl font-semibold text-blue-300 mb-4 flex items-center gap-2">
+              <HelpCircle className="w-5 h-5 text-cyan-400" />
+              Preguntas Frecuentes
+            </h2>
             <div className="space-y-6 text-white/90">
               <div>
                 <h3 className="font-bold text-white">¿Necesito tener una cuenta de Google?</h3>
@@ -136,12 +277,8 @@ export default function HomePage() {
                 <p>No. Tus clientes solo deben llenar el formulario de reservas. Tú gestionas el panel.</p>
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          {/* Footer */}
-          <footer className="text-center text-sm text-white/50 mt-12">
-            © {new Date().getFullYear()} Agenda Connect. Todos los derechos reservados.
-          </footer>
         </div>
       </main>
     </div>

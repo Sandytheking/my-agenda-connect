@@ -90,15 +90,17 @@ export default function AgendaPage() {
     doc.setFontSize(18);
     doc.text(`Citas del ${formattedDate}`, 14, 22);
 
-    const tableColumn = ["Hora", "Nombre", "Email", "Teléfono"];
-    const tableRows = citasFiltradas.map((cita) => [
-      DateTime.fromISO(cita.inicio, { zone: 'utc' })
-        .setZone('America/Santo_Domingo')
-        .toFormat('hh:mm a'),
-      cita.nombre,
-      cita.email,
-      cita.telefono,
-    ]);
+    const tableColumn = ["N°", "Hora", "Nombre", "Email", "Teléfono"];
+    const tableRows = citasFiltradas.map((cita, index) => [
+  index + 1,
+  DateTime.fromISO(cita.inicio, { zone: 'utc' })
+    .setZone('America/Santo_Domingo')
+    .toFormat('hh:mm a'),
+  cita.nombre,
+  cita.email,
+  cita.telefono,
+]);
+
 
     autoTable(doc, {
       head: [tableColumn],
@@ -111,34 +113,46 @@ export default function AgendaPage() {
   };
 
   const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(citasFiltradas);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Citas");
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    const data = new Blob([excelBuffer], {
-      type: "application/octet-stream",
-    });
-    saveAs(data, "citas.xlsx");
-  };
+  const datosFiltrados = citasFiltradas.map((cita, index) => ({
+  "N°": index + 1,
+  Hora: DateTime.fromISO(cita.inicio, { zone: 'utc' })
+    .setZone('America/Santo_Domingo')
+    .toFormat('hh:mm a'),
+  Nombre: cita.nombre,
+  Email: cita.email,
+  Teléfono: cita.telefono,
+}));
 
-  return (
-    <>
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => {
-            sessionStorage.removeItem("slug");
-            window.location.href = "/login";
-          }}
-          className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded"
-        >
-          🔒 Cerrar sesión
-        </button>
-      </div>
 
-<div className="flex justify-left mb-4">
+  const worksheet = XLSX.utils.json_to_sheet(datosFiltrados);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Citas");
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array",
+  });
+
+  const data = new Blob([excelBuffer], {
+    type: "application/octet-stream",
+  });
+  saveAs(data, "citas.xlsx");
+};
+
+
+ return (
+  <>
+    <div className="flex justify-between items-center px-6 pt-6">
+      <button
+        onClick={() => {
+          sessionStorage.removeItem("slug");
+          window.location.href = "/login";
+        }}
+        className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded"
+      >
+        🔒 Cerrar sesión
+      </button>
+
       <button
         onClick={() => {
           window.location.href = "/analiticas";
@@ -147,9 +161,11 @@ export default function AgendaPage() {
       >
         📊 Ver analíticas
       </button>
-      </div>
+    </div>
 
-      <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
+    <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
+      
+
         <h1 className="text-4xl font-bold mb-4 text-center">
           Agenda de {nombreNegocio || "Agenda Connect"}
         </h1>
@@ -212,33 +228,46 @@ export default function AgendaPage() {
             </div>
 
             <div className="grid gap-4">
-              {citasFiltradas.map((cita) => (
-                <div
-                  key={cita.id}
-                  className="bg-[#4c2882] text-white p-4 rounded shadow-md"
-                >
-                  <p className="font-bold text-lg">
-                    ⏰{" "}
-                    {DateTime.fromISO(cita.inicio, { zone: "utc" })
-                      .setZone("America/Santo_Domingo")
-                      .toFormat("hh:mm a")}{" "}
-                    - {cita.nombre}
-                  </p>
-                  <p>📧 {cita.email}</p>
-                  <p>📞 {cita.telefono}</p>
-                  <p
-                    className={`mt-2 inline-block px-2 py-1 rounded text-sm font-semibold ${
-                      cita.evento_id
-                        ? "bg-gray-800 text-green-600"
-                        : "bg-gray-800 text-yellow-400"
-                    }`}
-                  >
-                    {cita.evento_id
-                      ? "✅ Sincronizada con Google Calendar"
-                      : "⚠️ No sincronizada"}
-                  </p>
-                </div>
-              ))}
+              {citasFiltradas.map((cita, index) => (
+<div
+  key={cita.id}
+  className={`p-4 rounded shadow-md ${
+    cita.cancelada
+      ? 'bg-red-800 text-white'
+      : 'bg-[#4c2882] text-white'
+  }`}
+>
+  <p className="font-bold text-lg">
+    {index + 1}. ⏰{" "}
+    {DateTime.fromISO(cita.inicio, { zone: "utc" })
+      .setZone("America/Santo_Domingo")
+      .toFormat("hh:mm a")}{" "}
+    - {cita.nombre}
+  </p>
+  <p>📧 {cita.email}</p>
+  <p>📞 {cita.telefono}</p>
+
+  {cita.cancelada && (
+    <p className="mt-2 bg-white text-red-700 font-semibold px-2 py-1 rounded">
+      ❌ Esta cita fue cancelada por el cliente
+    </p>
+  )}
+
+  <p
+    className={`mt-2 inline-block px-2 py-1 rounded text-sm font-semibold ${
+      cita.evento_id
+        ? "bg-gray-800 text-green-600"
+        : "bg-gray-800 text-yellow-400"
+    }`}
+  >
+    {cita.evento_id
+      ? "✅ Sincronizada con Google Calendar"
+      : "⚠️ No sincronizada"}
+  </p>
+</div>
+
+))}
+
             </div>
           </>
         )}

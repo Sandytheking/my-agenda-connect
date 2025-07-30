@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const pasos = [
   {
@@ -10,75 +13,124 @@ const pasos = [
   {
     titulo: "2. Accede a tu panel de administración",
     descripcion:
-      "Ingresa a tu panel donde podrás personalizar tus horarios, días laborales y capacidad máxima. Desde aqui podras sincronizar tus citas con Google Calander",
-    imagen: "/admin2.webp",
-
- },
- {
-    titulo: "3. Descarga la app Google Calendar",
-    descripcion:
-      "En la App de Google Calandar podras ver todas tu citas bien organizada.",
-    imagen: "/calendario.webp",
- 
+      "Desde aquí puedes personalizar horarios, días laborales y sincronizar tus citas con Google Calendar. También verás tus reservas en un panel fácil de usar.",
+    imagen: "/admin3.webp",
   },
   {
-    titulo: "3. Conecta tu Google Calendar",
+    titulo: "3. Descarga la app Google Calendar",
+    descripcion:
+      "En la app de Google Calendar podrás ver todas tus citas organizadas, estés donde estés.",
+    imagen: "/calendario.webp",
+  },
+  {
+    titulo: "4. Conecta tu Google Calendar",
     descripcion:
       "Sincroniza automáticamente tus reservas con tu calendario de Google en solo un clic.",
     imagen: "/sinc.webp",
   },
   {
-    titulo: "4. Personaliza tu mensaje de WhatsApp",
+    titulo: "5. Personaliza tu mensaje de WhatsApp",
     descripcion:
-      "Configura un mensaje automático con el link para que tus clientes agenden por WhatsApp.",
+      "Crea un mensaje automático con el link para que tus clientes agenden directamente desde WhatsApp.",
     imagen: "/mensaj.webp",
   },
   {
-    titulo: "5. Recibe notificaciones automáticas",
+    titulo: "6. Recibe notificaciones automáticas",
     descripcion:
-      "Cada vez que alguien agenda una cita, recibirás una notificación instantánea en tu correo y una notificacion via la app de Google Calander.",
+      "Recibirás notificaciones instantáneas en tu correo y en la app de Google Calendar cuando se agende una cita.",
     imagen: "/notificacion2.webp",
   },
   {
-    titulo: "6. Accede fácilmente con tu cuenta",
+    titulo: "7. Accede fácilmente con tu cuenta",
     descripcion:
-      "Puedes volver cuando quieras, iniciar sesión y seguir recibiendo reservas sin complicaciones.",
+      "Vuelve cuando quieras. Inicia sesión y sigue recibiendo reservas sin complicaciones.",
     imagen: "/login3.webp",
   },
 ];
 
 export default function GuiaPage() {
   return (
-    <div className="min-h-screen bg-[#000000] text-white px-4 py-16">
+    <div className="min-h-screen bg-black text-white px-4 py-20">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-center mb-12 text-blue-400">
-          Guía detallada de uso
-        </h1>
+        <motion.h1
+          className="text-4xl md:text-5xl font-bold text-center mb-16 text-purple-400"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          Guía paso a paso para comenzar
+        </motion.h1>
 
-        {pasos.map((paso, index) => (
-          <div
-            key={index}
-            className={`flex flex-col md:flex-row items-center gap-8 mb-16 ${
-              index % 2 === 1 ? "md:flex-row-reverse" : ""
-            }`}
-          >
-            <div className="md:w-1/2">
-              <Image
-                src={paso.imagen}
-                alt={paso.titulo}
-                width={800}
-                height={600}
-                className="rounded-xl shadow-lg w-full h-auto"
-              />
-            </div>
-            <div className="md:w-1/2">
-              <h2 className="text-2xl font-bold text-blue-300 mb-4">
+        {/* Carrusel en móvil */}
+        <div className="block md:hidden overflow-x-auto snap-x snap-mandatory flex space-x-6 pb-8">
+          {pasos.map((paso, index) => (
+            <motion.div
+              key={index}
+              className="min-w-[85%] bg-white/5 rounded-3xl p-6 snap-center shrink-0 border border-white/10 shadow-xl relative z-10"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              {/* Glow detrás de la imagen */}
+              <div className="relative w-full mb-4">
+                <div className="absolute inset-0 rounded-2xl bg-purple-500 blur-2xl opacity-20 animate-pulse" />
+                <Image
+                  src={paso.imagen}
+                  alt={paso.titulo}
+                  width={700}
+                  height={400}
+                  className="rounded-2xl relative z-10"
+                />
+              </div>
+
+              <h2 className="text-xl font-semibold text-blue-400 mb-2">
                 {paso.titulo}
               </h2>
-              <p className="text-white/90 text-lg">{paso.descripcion}</p>
-            </div>
-          </div>
-        ))}
+              <p className="text-white/90 text-base leading-relaxed">
+                {paso.descripcion}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Layout normal para desktop */}
+        <div className="hidden md:block">
+          {pasos.map((paso, index) => (
+            <motion.div
+              key={index}
+              className={`flex flex-col md:flex-row items-center gap-10 mb-20 ${
+                index % 2 === 1 ? "md:flex-row-reverse" : ""
+              }`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+            >
+              <div className="md:w-1/2 relative">
+                {/* Glow detrás de la imagen */}
+                <div className="absolute inset-0 rounded-3xl bg-purple-500 blur-2xl opacity-20 animate-pulse" />
+                <Image
+                  src={paso.imagen}
+                  alt={paso.titulo}
+                  width={800}
+                  height={500}
+                  className="rounded-3xl shadow-2xl border border-white/10 relative z-10"
+                />
+              </div>
+
+              <div className="md:w-1/2">
+                <h2 className="text-2xl md:text-3xl font-semibold text-blue-400 mb-4">
+                  {paso.titulo}
+                </h2>
+                <p className="text-lg text-white/90 leading-relaxed">
+                  {paso.descripcion}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
