@@ -50,16 +50,34 @@ export default function AnaliticasPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const slug = typeof window !== 'undefined' ? sessionStorage.getItem('slug') : null;
+  const [desde, setDesde] = useState('');
+  const [hasta, setHasta] = useState('');
+
+
+const construirURL = () => {
+  let url = `https://api.agenda-connect.com/api/analytics/${slug}`;
+  const params = [];
+
+  if (desde) params.push(`desde=${desde}`);
+  if (hasta) params.push(`hasta=${hasta}`);
+
+  if (params.length) url += `?${params.join('&')}`;
+  return url;
+};
+
 
   useEffect(() => {
-    if (!slug) return;
+  if (!slug) return;
 
-    fetch(`https://api.agenda-connect.com/api/analytics/${slug}`)
-      .then((res) => res.json())
-      .then(setData)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [slug]);
+  setLoading(true);
+
+  fetch(construirURL())
+    .then((res) => res.json())
+    .then(setData)
+    .catch(console.error)
+    .finally(() => setLoading(false));
+}, [slug, desde, hasta]);
+
 
   if (loading) return <p className="p-8 text-white">Cargando analíticas...</p>;
   if (!data) return <p className="p-8 text-red-500">❌ Error cargando datos</p>;
@@ -68,6 +86,30 @@ export default function AnaliticasPage() {
     <div className="bg-[#0C1A1A] min-h-screen text-white flex items-center justify-center">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">📊 Panel de Analíticas</h2>
+        
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-8">
+  <div className="flex flex-col">
+    <label htmlFor="desde" className="text-sm text-gray-300 mb-1">📅 Desde</label>
+    <input
+      type="date"
+      id="desde"
+      value={desde}
+      onChange={(e) => setDesde(e.target.value)}
+      className="bg-[#1e293b] text-white p-2 rounded border border-gray-600"
+    />
+  </div>
+  <div className="flex flex-col">
+    <label htmlFor="hasta" className="text-sm text-gray-300 mb-1">📅 Hasta</label>
+    <input
+      type="date"
+      id="hasta"
+      value={hasta}
+      onChange={(e) => setHasta(e.target.value)}
+      className="bg-[#1e293b] text-white p-2 rounded border border-gray-600"
+    />
+  </div>
+</div>
+
         <p className="text-gray-400">Aún no hay citas agendadas para mostrar estadísticas.</p>
       </div>
     </div>

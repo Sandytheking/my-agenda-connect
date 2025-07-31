@@ -24,6 +24,8 @@ export default function AdminAvanzado() {
   const [mensaje, setMensaje] = useState("");
   const [isActivo, setIsActivo] = useState(true);
   const [fechaVencimiento, setFechaVencimiento] = useState("");
+  const [conectadoGoogle, setConectadoGoogle] = useState(false);
+
   
 
   const token = typeof window !== "undefined" && sessionStorage.getItem("accessToken");
@@ -92,6 +94,8 @@ useEffect(() => {
       setConfigPorDia(porDia);
       setIsActivo(data.is_active !== false);
       setFechaVencimiento(data.expiration_date || "");
+      setConectadoGoogle(!!data.refresh_token);
+
     } catch (error) {
       console.error("❌ Error al conectar con el servidor:", error);
       setMensaje("❌ Error al conectar con el servidor");
@@ -297,6 +301,18 @@ if (Object.keys(configPorDia).length === 0) {
             </div>
           ))}
         </div>
+
+<div
+  className={`text-sm mb-4 px-4 py-2 rounded font-semibold text-center ${
+    conectadoGoogle
+      ? "bg-green-200 text-green-800"
+      : "bg-red-200 text-red-800"
+  }`}
+>
+  {conectadoGoogle
+    ? "✅ Google Calendar está conectado correctamente."
+    : "❌ Google Calendar no está conectado."}
+</div>
 
         <div className="flex justify-center mt-6 gap-4">
           <button

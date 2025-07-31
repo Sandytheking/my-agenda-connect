@@ -9,6 +9,8 @@ import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { DateTime } from "luxon";
+import ExportButtons from "@/components/ExportButtons";
+
 
 type Cita = {
   id: string;
@@ -29,15 +31,29 @@ export default function AgendaPage() {
   const [slug, setSlug] = useState("");
   const [selectedDayOffset, setSelectedDayOffset] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
+  const [plan, setPlan] = useState("");
+
+
 
   useEffect(() => {
-    const storedSlug = sessionStorage.getItem("slug");
-    if (!storedSlug) {
-      router.push("/login");
-    } else {
-      setSlug(storedSlug);
-    }
-  }, []);
+  const storedSlug = sessionStorage.getItem("slug");
+  if (!storedSlug) {
+    router.push("/login");
+  } else {
+    setSlug(storedSlug);
+
+    // Obtener el plan del cliente
+    fetch(`https://api.agenda-connect.com/api/plan/${storedSlug}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.plan) setPlan(data.plan);
+      })
+      .catch((err) => {
+        console.error("Error al obtener el plan:", err);
+      });
+  }
+}, []);
+
 
   useEffect(() => {
     const date = new Date();
@@ -54,6 +70,15 @@ export default function AgendaPage() {
 
   useEffect(() => {
     if (!slug) return;
+
+    axios
+  .get(`https://api.agenda-connect.com/api/plan/${slug}`)
+  .then((res) => setPlan(res.data?.plan || "free"))
+  .catch((err) => {
+    console.error("Error al obtener el plan:", err);
+    setPlan("free");
+  });
+
 
     axios
       .get(`https://api.agenda-connect.com/api/citas?slug=${slug}`)
@@ -86,59 +111,53 @@ export default function AgendaPage() {
     return diffInDays === selectedDayOffset;
   });
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text(`Citas del ${formattedDate}`, 14, 22);
-
-    const tableColumn = ["N°", "Hora", "Nombre", "Email", "Teléfono"];
-    const tableRows = citasFiltradas.map((cita, index) => [
-  index + 1,
-  DateTime.fromISO(cita.inicio, { zone: 'utc' })
-    .setZone('America/Santo_Domingo')
-    .toFormat('hh:mm a'),
-  cita.nombre,
-  cita.email,
-  cita.telefono,
-]);
-
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      startY: 30,
-      styles: { fontSize: 10 },
+  const exportToPDF = async () => {
+  try {
+    const res = await fetch(`https://api.agenda-connect.com/api/export-pdf/${slug}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fecha: formattedDate }),
     });
 
-    doc.save("citas.pdf");
-  };
+    if (!res.ok) throw new Error('Error al generar el PDF');
 
-  const exportToExcel = () => {
-  const datosFiltrados = citasFiltradas.map((cita, index) => ({
-  "N°": index + 1,
-  Hora: DateTime.fromISO(cita.inicio, { zone: 'utc' })
-    .setZone('America/Santo_Domingo')
-    .toFormat('hh:mm a'),
-  Nombre: cita.nombre,
-  Email: cita.email,
-  Teléfono: cita.telefono,
-}));
-
-
-  const worksheet = XLSX.utils.json_to_sheet(datosFiltrados);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Citas");
-
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "array",
-  });
-
-  const data = new Blob([excelBuffer], {
-    type: "application/octet-stream",
-  });
-  saveAs(data, "citas.xlsx");
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'citas.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error exportando PDF:', error);
+  }
 };
+
+
+
+  const exportToExcel = async () => {
+  try {
+    const res = await fetch(`https://api.agenda-connect.com/api/export-excel/${slug}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fecha: formattedDate }),
+    });
+
+    if (!res.ok) throw new Error('Error al generar el Excel');
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'citas.xlsx';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error exportando Excel:', error);
+  }
+};
+
+
 
 
  return (
@@ -213,20 +232,12 @@ export default function AgendaPage() {
           </p>
         ) : (
           <>
-            <div className="flex justify-end gap-4 mb-4">
-              <button
-                onClick={exportToPDF}
-                className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 transition"
-              >
-                📄 Exportar PDF
-              </button>
-              <button
-                onClick={exportToExcel}
-                className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 transition"
-              >
-                📊 Exportar Excel
-              </button>
-            </div>
+            <ExportButtons
+  plan={plan}
+  exportToPDF={exportToPDF}
+  exportToExcel={exportToExcel}
+/>
+
 
             <div className="grid gap-4">
               {citasFiltradas.map((cita, index) => (

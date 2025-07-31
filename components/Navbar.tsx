@@ -26,6 +26,7 @@ export default function Navbar() {
         <nav className="hidden md:flex space-x-6">
           <Link href="/" className="hover:text-blue-400">Inicio</Link>
           <Link href="/registro" className="hover:text-blue-400">Registro</Link>
+          <Link href="/precios" className="hover:text-blue-400">Planes</Link>
           <Link href="/login" className="hover:text-blue-400">Login</Link>
           <Link href="/guia" className="hover:text-blue-400">Guia</Link>
           <Link href="/terminos" className="hover:text-blue-400">Términos</Link>
@@ -52,6 +53,7 @@ export default function Navbar() {
         <div className="md:hidden px-6 pb-4 space-y-2 bg-[#000000]">
           <Link href="/" className="block hover:text-blue-400">Inicio</Link>
           <Link href="/registro" className="block hover:text-blue-400">Registro</Link>
+          <Link href="/precios" className="block hover:text-blue-400">Planes</Link>
           <Link href="/login" className="block hover:text-blue-400">Login</Link>
           <Link href="/guia" className="block hover:text-blue-400">Guia</Link>
           <Link href="/terminos" className="block hover:text-blue-400">Términos</Link>
