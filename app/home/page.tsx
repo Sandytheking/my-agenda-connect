@@ -113,17 +113,17 @@ export default function HomePage() {
                   <tr className="bg-purple-700 text-white">
                     <th className="p-3 border border-white/10">Características</th>
                     <th className="p-3 border border-white/10">Agenda Connect</th>
-                    <th className="p-3 border border-white/10">Google Calendar</th>
                     <th className="p-3 border border-white/10">Competidores</th>
+                    <th className="p-3 border border-white/10">Google Calendar</th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
                     ["Citas ilimitadas", "✅", "❌", "❌"],
-                    ["Panel administrativo", "✅", "❌", "✅"],
+                    ["Panel administrativo", "✅", "✅", "❌"],
                     ["Integración WhatsApp", "🛠️ En camino", "❌", "❌"],
                     ["Notificaciones automáticas", "✅", "✅", "✅"],
-                    ["Soporte en español", "✅", "❌", "✅"],
+                    ["Soporte en español", "✅", "✅", "❌"],
                     ["Exportar citas a Excel/PDF", "✅", "❌", "❌"],
                     ["Panel de analíticas de citas", "✅", "❌", "❌"]
                   ].map((row, i) => (
