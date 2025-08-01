@@ -1,6 +1,6 @@
 // app/registro/page.tsx
-import RegistroClient from "./RegistroClient";
+import RegistroForm from "./RegistroForm";
 
 export default function RegistroPage() {
-  return <RegistroClient />;
+  return <RegistroForm />;
 }
