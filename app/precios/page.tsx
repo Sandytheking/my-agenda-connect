@@ -1,8 +1,10 @@
-// app/precios/page.tsx
-"use client";
-
+import { Suspense } from "react";
 import PricingClient from "./PricingClient";
 
 export default function Page() {
-  return <PricingClient />;
+  return (
+    <Suspense fallback={<div>Cargando precios...</div>}>
+      <PricingClient />
+    </Suspense>
+  );
 }
