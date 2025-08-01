@@ -1,6 +1,7 @@
-import dynamic from "next/dynamic";
+// app/precios/page.tsx
+"use client";
 
-const PricingClient = dynamic(() => import("./PricingClient"), { ssr: false });
+import PricingClient from "./PricingClient";
 
 export default function Page() {
   return <PricingClient />;
