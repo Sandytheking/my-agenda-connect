@@ -3,6 +3,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <Navbar />
-        {/* Agregamos padding-top para dejar espacio al navbar fijo */}
-        <main className="pt-20 px-4">{children}</main>
+        <LanguageProvider>
+          <Navbar />
+          <main className="pt-20 px-4">{children}</main>
+        </LanguageProvider>
       </body>
     </html>
   );
 }
+

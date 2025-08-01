@@ -10,6 +10,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { DateTime } from "luxon";
 import ExportButtons from "@/components/ExportButtons";
+import { useParams } from 'next/navigation';
+
 
 
 type Cita = {
@@ -32,6 +34,7 @@ export default function AgendaPage() {
   const [selectedDayOffset, setSelectedDayOffset] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
   const [plan, setPlan] = useState("");
+  
 
 
 
@@ -232,10 +235,11 @@ export default function AgendaPage() {
           </p>
         ) : (
           <>
-            <ExportButtons
-  plan={plan}
-  exportToPDF={exportToPDF}
-  exportToExcel={exportToExcel}
+
+<ExportButtons
+  citasFiltradas={citasFiltradas}
+  formattedDate={formattedDate}
+  slug={slug}
 />
 
 

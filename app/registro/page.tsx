@@ -1,10 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Registro() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const validPlans = ["free", "pro", "business"];
+  const selectedPlan = useMemo(() => {
+    const param = searchParams.get("plan") || "";
+    return validPlans.includes(param) ? param : "free";
+  }, [searchParams]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nombre, setNombre] = useState("");
@@ -15,8 +23,6 @@ export default function Registro() {
 
   const [slugStatus, setSlugStatus] = useState<null | "ok" | "error" | "checking">(null);
   const [slugMensaje, setSlugMensaje] = useState("");
-
-  const router = useRouter();
 
   const validarSlug = async () => {
     const limpio = slug.trim().toLowerCase();
@@ -62,6 +68,8 @@ export default function Registro() {
     setCargando(true);
     setMensaje("Creando cuenta...");
 
+    console.log("Plan seleccionado:", selectedPlan);
+
     try {
       const res = await fetch("https://api.agenda-connect.com/api/registro", {
         method: "POST",
@@ -71,6 +79,7 @@ export default function Registro() {
           password,
           nombre,
           slug,
+          plan: selectedPlan,
           accepted_terms: true,
         }),
       });
@@ -102,7 +111,7 @@ export default function Registro() {
   const botonDeshabilitado = slugStatus !== "ok" || !aceptado;
 
   return (
-   <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
+    <div className="min-h-screen flex items-center justify-center bg-black px-4 text-white">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md space-y-6 bg-[#4c2882] p-8 rounded-xl shadow-md"
@@ -112,7 +121,7 @@ export default function Registro() {
         <input
           type="text"
           placeholder="Nombre del negocio"
-          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
         />
@@ -120,7 +129,7 @@ export default function Registro() {
         <input
           type="email"
           placeholder="Correo electrónico"
-          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -128,7 +137,7 @@ export default function Registro() {
         <input
           type="password"
           placeholder="Contraseña"
-          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -137,7 +146,7 @@ export default function Registro() {
           <input
             type="text"
             placeholder="(Slug) Ej: maria-salon"
-            className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
             onBlur={validarSlug}
@@ -170,9 +179,7 @@ export default function Registro() {
           </a>
         </label>
 
-        {mensaje && (
-          <div className="text-sm text-center text-red-400 font-medium">{mensaje}</div>
-        )}
+        {mensaje && <div className="text-sm text-center text-red-400 font-medium">{mensaje}</div>}
 
         <button
           type="submit"

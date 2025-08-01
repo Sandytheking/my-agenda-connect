@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 import * as XLSX from "xlsx";
 import {
   Chart as ChartJS,
@@ -18,6 +20,8 @@ import { Bar, Pie, Radar } from 'react-chartjs-2';
 import { Users, Clock, CalendarDays, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -46,12 +50,23 @@ type AnalyticsData = {
   duracionPromedio: number; // en minutos
 };
 
+
+
 export default function AnaliticasPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const slug = typeof window !== 'undefined' ? sessionStorage.getItem('slug') : null;
   const [desde, setDesde] = useState('');
   const [hasta, setHasta] = useState('');
+
+const router = useRouter();
+
+const cerrarSesion = async () => {
+  const supabase = createClient();
+  await supabase.auth.signOut();
+  sessionStorage.clear(); // limpia slug u otros datos
+  router.push('/'); // redirige al home o login
+};
 
 
 const construirURL = () => {
@@ -127,12 +142,12 @@ const construirURL = () => {
     duracionPromedio
   } = data;
 
-  const meses = Object.keys(citasPorMes).sort();
-  const cantidades = meses.map((m) => citasPorMes[m]);
+  const meses = Object.keys(citasPorMes || {}).sort();
+  const cantidades = meses.map((m) => citasPorMes?.[m] ?? 0);
+
 
   const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   const cantidadesPorDia = dias.map((d) => (citasPorDia?.[d] ?? 0));
-
 
   const exportClientesPDF = () => {
     const doc = new jsPDF();
@@ -193,8 +208,9 @@ const exportResumenExcel = () => {
     ['Citas no sincronizadas', noSincronizadas ?? 0],
     ['Clientes recurrentes (únicos)', clientesRecurrentes?.length ?? 0],
     ['Duración promedio de las citas', `${duracionPromedio ?? 0} minutos`],
-    ['Cantidad de meses con citas registradas', citasPorMes ? Object.keys(citasPorMes).length : 0],
-    ['Cantidad de días únicos con citas', citasPorDia ? Object.keys(citasPorDia).length : 0],
+    ['Cantidad de meses con citas registradas', Object.keys(citasPorMes || {}).length],
+    ['Cantidad de días únicos con citas', Object.keys(citasPorDia || {}).length],
+
   ];
 
   const worksheet = XLSX.utils.aoa_to_sheet(resumen);
@@ -205,10 +221,19 @@ const exportResumenExcel = () => {
 };
 
 
+
   return (
 
     <div className="bg-[#0C1A1A] min-h-screen text-white p-6">
     <div className="flex justify-end mb-6 gap-4">
+      
+<button
+    onClick={cerrarSesion}
+    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm"
+  >
+    🔓 Cerrar sesión
+  </button>
+
   <button
     onClick={exportResumenPDF}
     className="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 text-sm"
