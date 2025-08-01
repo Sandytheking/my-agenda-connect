@@ -1,10 +1,6 @@
 // app/registro/page.tsx
-import RegistroForm from "./RegistroForm";
+import RegistroClient from "./RegistroClient";
 
 export default function RegistroPage() {
-  return (
-    <main className="min-h-screen flex items-center justify-center bg-black px-4 text-white">
-      <RegistroForm />
-    </main>
-  );
+  return <RegistroClient />;
 }
