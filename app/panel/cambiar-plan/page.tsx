@@ -87,7 +87,15 @@ export default function CambiarPlan() {
       if (token) {
         const decoded = parseJwt(token);
         if (decoded && decoded.id) {
-          setUser({ id: decoded.id, email: decoded.email || '', plan: '' });
+         
+const slugFromStorage = typeof window !== 'undefined' ? sessionStorage.getItem('slug') || '' : '';
+setUser({
+  id: decoded.id,
+  email: decoded.email || '',
+  plan: '',
+  slug: slugFromStorage,
+});
+
         }
       }
     }
