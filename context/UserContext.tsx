@@ -66,7 +66,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (res.ok) {
           const data = await res.json();
-          console.log('✅ Usuario recuperado desde backend:', data.user);
+          
 
           setUser(data.user);
         } else {

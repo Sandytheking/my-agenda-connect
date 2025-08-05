@@ -167,6 +167,7 @@ export default function AgendaPage() {
 
 
  return (
+
   <>
     <div className="flex justify-between items-center px-6 pt-6">
       <button
@@ -189,16 +190,6 @@ export default function AgendaPage() {
       </button>
     </div>
 
-{slug && (
-  <Link
-    href="/panel/cambiar-plan"
-    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-4"
-  >
-    Cambiar plan
-  </Link>
-)}
-
-
 
     <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
       
@@ -211,6 +202,7 @@ export default function AgendaPage() {
           📅 Citas para {formattedDate}
         </h2>
 
+
         <div className="flex justify-center gap-2 mb-8 flex-wrap">
           {[...Array(7)].map((_, i) => {
             const fecha = new Date();
@@ -222,6 +214,7 @@ export default function AgendaPage() {
             });
             const label = i === 0 ? "Hoy" : i === 1 ? "Mañana" : dia;
             return (
+
               <button
                 key={i}
                 onClick={() => setSelectedDayOffset(i)}
@@ -233,9 +226,20 @@ export default function AgendaPage() {
               >
                 {label}
               </button>
+
             );
           })}
         </div>
+
+
+        {slug && (
+  <Link
+    href="/panel/cambiar-plan"
+    className="bg-purple-600 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-full"
+  >
+    Cambiar plan
+  </Link>
+)}
 
         {mensaje && (
           <div className="bg-red-600 text-white px-4 py-3 rounded mb-6 text-center font-medium">
@@ -261,7 +265,7 @@ export default function AgendaPage() {
 
 <div className="grid gap-4">
 {citasFiltradas.map((cita, index) => (
-  
+
 <div
   key={cita.id}
   className={`p-4 rounded shadow-md ${

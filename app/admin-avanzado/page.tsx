@@ -70,8 +70,7 @@ const [slug, setSlug] = useState<string | null>(null);
     });
 
     const data = await res.json();
-    console.log("🔍 config recibido del backend:", data);
-    console.log("🧾 Usuario en Admin:", user);
+    
 
     if (!res.ok) {
       setMensaje("❌ Error: " + (data.error || "Error desconocido"));
@@ -173,7 +172,7 @@ useEffect(() => {
     });
 
     const data = await res.json();
-    console.log("✅ data recibida del backend:", data); 
+    
 
     setIsActivo(data.is_active !== false);
     setFechaVencimiento(data.expiration_date || "");

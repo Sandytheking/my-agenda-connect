@@ -26,10 +26,14 @@ export async function getPlanActual() {
 }
 
 export async function updatePlanCliente(nuevoPlan: string) {
-  const token = sessionStorage.getItem("accessToken");
-  const slug = sessionStorage.getItem("slug");
+  const token = typeof window !== "undefined" ? sessionStorage.getItem("accessToken") : null;
+  const slug = typeof window !== "undefined" ? sessionStorage.getItem("slug") : null;
 
+  
   if (!token || !slug) throw new Error("Token o slug faltante");
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/update-plan`, {
     method: "POST",
@@ -37,14 +41,19 @@ export async function updatePlanCliente(nuevoPlan: string) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+    signal: controller.signal,
     body: JSON.stringify({ slug, nuevoPlan }),
-  });
+  }).finally(() => clearTimeout(timeout));
 
-  const data = await res.json();
+  console.log('updatePlanCliente -> fetch status:', res.status, res.statusText);
 
-  if (!res.ok) {
-    throw new Error(data.error || "Error actualizando el plan");
+  const text = await res.text();
+  try {
+    const data = JSON.parse(text);
+    if (!res.ok) throw new Error(data.error || 'Error actualizando');
+    return data;
+  } catch (err) {
+    console.error('updatePlanCliente -> response raw:', text);
+    throw new Error('Respuesta inválida del servidor al actualizar plan');
   }
-
-  return data;
 }

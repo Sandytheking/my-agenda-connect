@@ -13,41 +13,65 @@ export default function Login() {
   const router = useRouter();
 
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Login.tsx (solo el handleLogin modificado)
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!email || !password) {
-      setMensaje("⚠️ Email y contraseña obligatorios.");
+  if (!email || !password) {
+    setMensaje("⚠️ Email y contraseña obligatorios.");
+    return;
+  }
+
+  setCargando(true);
+  setMensaje("Verificando...");
+
+  try {
+    const res = await fetch("https://api.agenda-connect.com/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok) {
+      setMensaje("❌ " + (data?.error || "Credenciales inválidas."));
       return;
     }
 
-    setCargando(true);
-    setMensaje("Verificando...");
+    // Diferentes backends pueden devolver:
+    // { token, slug, user }  OR  { access_token, slug } OR { session: { access_token }, slug }
+    const token =
+      data?.token ||
+      data?.access_token ||
+      data?.session?.access_token ||
+      data?.session?.accessToken;
 
-    try {
-      const res = await fetch("https://api.agenda-connect.com/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    const slug = data?.slug || data?.config?.slug || data?.user?.slug;
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setMensaje("❌ " + (data.error || "Credenciales inválidas."));
-      } else {
-        sessionStorage.setItem("accessToken", data.token);
-        sessionStorage.setItem("slug", data.slug);
-
-        setMensaje("✅ Bienvenido. Redirigiendo...");
-        setTimeout(() => router.push("/admin-avanzado"), 1500);
-      }
-    } catch (err) {
-      setMensaje("❌ Error al conectar con el servidor.");
-    } finally {
-      setCargando(false);
+    if (!token) {
+      console.warn("Login OK pero no vino token. Respuesta completa:", data);
+      setMensaje("❌ Login exitoso pero no se recibió token (revisa backend).");
+      return;
     }
-  };
+
+    // Guarda en sessionStorage para que otras páginas lo lean
+    sessionStorage.setItem("accessToken", token);
+    if (slug) sessionStorage.setItem("slug", slug);
+    else console.warn("Login: slug no provisto en la respuesta de login.");
+
+    // Opcional: si usas UserContext y tienes setUser, setéalo aquí:
+    // if (typeof setUser === 'function' && data?.user) setUser(data.user);
+
+    setMensaje("✅ Bienvenido. Redirigiendo...");
+    setTimeout(() => router.push("/admin-avanzado"), 700);
+  } catch (err) {
+    console.error("handleLogin error:", err);
+    setMensaje("❌ Error al conectar con el servidor.");
+  } finally {
+    setCargando(false);
+  }
+};
 
   return (
    <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
