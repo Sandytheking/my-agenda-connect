@@ -1,3 +1,6 @@
+
+//admin advanzado
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -30,7 +33,7 @@ export default function AdminAvanzado() {
   const [conectadoGoogle, setConectadoGoogle] = useState(false);
 
   
-const { user, accessToken } = useUser();
+const { user } = useUser();
 const [token, setToken] = useState<string | null>(null);
 const [slug, setSlug] = useState<string | null>(null);
 
