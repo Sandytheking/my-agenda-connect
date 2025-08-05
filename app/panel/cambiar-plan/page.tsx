@@ -1,3 +1,6 @@
+
+//panel/cambiar-plan
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -84,7 +87,7 @@ export default function CambiarPlan() {
       if (token) {
         const decoded = parseJwt(token);
         if (decoded && decoded.id) {
-          setUser((prev) => prev ?? { id: decoded.id, email: decoded.email || '', plan: '' });
+          setUser({ id: decoded.id, email: decoded.email || '', plan: '' });
         }
       }
     }
