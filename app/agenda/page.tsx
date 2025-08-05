@@ -250,11 +250,14 @@ export default function AgendaPage() {
         ) : (
           <>
 
-<ExportButtons
-  citasFiltradas={citasFiltradas}
-  formattedDate={formattedDate}
-  slug={slug}
-/>
+{slug && (
+  <ExportButtons
+    citasFiltradas={citasFiltradas}
+    formattedDate={formattedDate}
+    slug={slug}
+  />
+)}
+
 
 <div className="grid gap-4">
 {citasFiltradas.map((cita, index) => (
