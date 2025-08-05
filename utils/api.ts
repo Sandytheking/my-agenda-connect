@@ -1,14 +1,13 @@
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { supabase } from './supabase/singleton';
+// Si necesitas usar el singleton para otros fines, puedes renombrarlo:
+import { supabase as supabaseSingleton } from './supabase/singleton';
 
 // ✅ Cliente de Supabase para componentes cliente
 const supabase = createClientComponentClient();
 
 export async function getPlanActual() {
-  const supabase = createBrowserSupabaseClient();
-
   const {
     data: { session },
   } = await supabase.auth.getSession();
