@@ -1,4 +1,4 @@
-// translations.ts
+//lib/pricing.ts
 
 export const translations = {
   es: {

@@ -7,6 +7,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageCircleMore, Star, Calendar, HelpCircle } from "lucide-react";
+import LanguageToggle from '@/components/LanguageToggle'
+
+
 
 const images = [
   "/analitica.webp",
@@ -15,7 +18,9 @@ const images = [
 ];
 
 export default function HomePage() {
+ 
   const [current, setCurrent] = useState(0);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,6 +30,7 @@ export default function HomePage() {
   }, []);
 
   return (
+    
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* 🌌 Partículas */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -32,7 +38,7 @@ export default function HomePage() {
         <div className="absolute w-[500px] h-[500px] bg-blue-500 opacity-20 blur-[140px] rounded-full top-[300px] right-[-150px] animate-ping" />
       </div>
 
-     
+     <LanguageToggle />
 
       <main className="relative z-10 px-6 py-12">
         <div className="max-w-7xl mx-auto">
@@ -91,8 +97,7 @@ export default function HomePage() {
   </div>
 </motion.div>
 
-
-
+ 
           </section>
 
           {/* 📊 Comparativa */}
@@ -282,6 +287,7 @@ export default function HomePage() {
             </div>
           </motion.section>
 
+  
         </div>
       </main>
     </div>

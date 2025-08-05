@@ -3,10 +3,11 @@
 
 import { CheckCircle, Star } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { translations } from "@/lib/translations";
+import { translations } from "@/lib/pricing";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+
 
 const planes = [
   {
@@ -16,7 +17,7 @@ const planes = [
     descripcion: "Ideal para probar el sistema.",
     beneficios: [
       "1 usuario administrador",
-      "Hasta 10 citas al mes",
+      "Hasta 20 citas al mes",
       "Acceso limitado al panel",
     ],
     destacado: false,
@@ -42,7 +43,7 @@ const planes = [
     descripcion: "Para equipos o empresas.",
     beneficios: [
       "Todo en el plan Pro",
-      "Múltiples usuarios",
+      "Acceso al panel de analiticas",
       "Soporte prioritario",
       "Acceso a funciones futuras",
     ],
@@ -75,9 +76,9 @@ export default function PricingClient() {
 
           <button
             onClick={() => setLanguage(language === "es" ? "en" : "es")}
-            className="text-sm bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition"
+            className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-purple-600 text-sm font-medium"
           >
-            {language === "es" ? "Switch to English" : "Cambiar a Español"}
+            {language === "es" ? "English" : "Español"}
           </button>
         </div>
 

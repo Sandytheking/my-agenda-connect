@@ -11,6 +11,8 @@ import { saveAs } from "file-saver";
 import { DateTime } from "luxon";
 import ExportButtons from "@/components/ExportButtons";
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
+
 
 
 
@@ -24,39 +26,42 @@ type Cita = {
   cancelada?: boolean;
 };
 
-export default function AgendaPage() {
-  const router = useRouter();
 
+
+export default function AgendaPage() {
+  const [slug, setSlug] = useState<string | null>(null);
+  const [plan, setPlan] = useState("");
   const [citas, setCitas] = useState<Cita[]>([]);
   const [nombreNegocio, setNombreNegocio] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [slug, setSlug] = useState("");
   const [selectedDayOffset, setSelectedDayOffset] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
-  const [plan, setPlan] = useState("");
-  
+  const router = useRouter();
 
-
-
+  //Al cargar la página, obtenemos el slug o redirigimos
   useEffect(() => {
-  const storedSlug = sessionStorage.getItem("slug");
-  if (!storedSlug) {
-    router.push("/login");
-  } else {
-    setSlug(storedSlug);
+    const storedSlug = sessionStorage.getItem("slug");
+    if (!storedSlug) {
+      router.push("/login");
+    } else {
+      setSlug(storedSlug);
+    }
+  }, []);
 
-    // Obtener el plan del cliente
-    fetch(`https://api.agenda-connect.com/api/plan/${storedSlug}`)
+  //Cuando `slug` esté listo, hacemos fetch al plan
+  useEffect(() => {
+    if (!slug) return;
+
+    fetch(`https://api.agenda-connect.com/api/plan/${slug}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.plan) setPlan(data.plan);
+        else console.warn("⚠️ Plan no encontrado en la respuesta:", data);
       })
       .catch((err) => {
         console.error("Error al obtener el plan:", err);
       });
-  }
-}, []);
-
+  }, [slug]);
 
   useEffect(() => {
     const date = new Date();
@@ -161,8 +166,6 @@ export default function AgendaPage() {
 };
 
 
-
-
  return (
   <>
     <div className="flex justify-between items-center px-6 pt-6">
@@ -185,6 +188,17 @@ export default function AgendaPage() {
         📊 Ver analíticas
       </button>
     </div>
+
+{slug && (
+  <Link
+    href="/panel/cambiar-plan"
+    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-4"
+  >
+    Cambiar plan
+  </Link>
+)}
+
+
 
     <div className="min-h-screen bg-[#000000] text-white px-6 py-10">
       

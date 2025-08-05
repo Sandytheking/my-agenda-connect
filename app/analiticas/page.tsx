@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
 import * as XLSX from "xlsx";
 import {
   Chart as ChartJS,
@@ -58,15 +57,6 @@ export default function AnaliticasPage() {
   const slug = typeof window !== 'undefined' ? sessionStorage.getItem('slug') : null;
   const [desde, setDesde] = useState('');
   const [hasta, setHasta] = useState('');
-
-const router = useRouter();
-
-const cerrarSesion = async () => {
-  const supabase = createClient();
-  await supabase.auth.signOut();
-  sessionStorage.clear(); // limpia slug u otros datos
-  router.push('/'); // redirige al home o login
-};
 
 
 const construirURL = () => {
@@ -226,13 +216,7 @@ const exportResumenExcel = () => {
 
     <div className="bg-[#0C1A1A] min-h-screen text-white p-6">
     <div className="flex justify-end mb-6 gap-4">
-      
-<button
-    onClick={cerrarSesion}
-    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm"
-  >
-    🔓 Cerrar sesión
-  </button>
+
 
   <button
     onClick={exportResumenPDF}

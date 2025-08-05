@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DateTime } from 'luxon';
+import { useUser } from "@/context/UserContext";
+
+
 
 export default function AdminAvanzado() {
   const router = useRouter();
@@ -27,9 +30,13 @@ export default function AdminAvanzado() {
   const [conectadoGoogle, setConectadoGoogle] = useState(false);
 
   
+const { user, accessToken } = useUser();
+const [token, setToken] = useState<string | null>(null);
+const [slug, setSlug] = useState<string | null>(null);
 
-  const token = typeof window !== "undefined" && sessionStorage.getItem("accessToken");
-  const slug = typeof window !== "undefined" && sessionStorage.getItem("slug");
+
+
+
 
   const dayNumberToName: { [key: string]: string } = {
     "1": "Monday",
@@ -45,65 +52,79 @@ export default function AdminAvanzado() {
     Object.entries(dayNumberToName).map(([k, v]) => [v, k])
   );
 
+
+ const fetchConfig = async (token: string) => {
+  if (!token) {
+    setMensaje("❌ Token no encontrado");
+    return;
+  }
+
+  console.log("🚀 Iniciando fetchConfig...");
+
+  try {
+    const res = await fetch(`https://api.agenda-connect.com/api/private-config`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+    console.log("🔍 config recibido del backend:", data);
+    console.log("🧾 Usuario en Admin:", user);
+
+    if (!res.ok) {
+      setMensaje("❌ Error: " + (data.error || "Error desconocido"));
+      return;
+    }
+
+    setMaxPorHora(String(data.max_per_hour || 1));
+    setMaxPorDia(String(data.max_per_day || 1));
+    setDuracionCita(String(data.duration_minutes || 30));
+
+    const porDia: { [key: string]: any } = {};
+
+    for (let i = 1; i <= 7; i++) {
+      const diaKey = String(i);
+      const dayName = dayNumberToName[diaKey];
+      const configDelDia = data.per_day_config?.[dayName];
+      const isLaborable = configDelDia?.enabled ?? (data.work_days || []).includes(dayName);
+
+      porDia[diaKey] = {
+        activo: isLaborable,
+        entrada: configDelDia?.start ?? data.start_hour ?? "08:00",
+        salida: configDelDia?.end ?? data.end_hour ?? "17:00",
+        almuerzoInicio:
+          configDelDia?.lunch?.start ?? (configDelDia?.lunch === null ? "" : "12:00"),
+        almuerzoFin:
+          configDelDia?.lunch?.end ?? (configDelDia?.lunch === null ? "" : "13:00"),
+      };
+    }
+
+    console.log("✅ configPorDia generado y listo:", porDia);
+
+    setConfigPorDia(porDia);
+    setIsActivo(data.is_active !== false);
+    setFechaVencimiento(data.expiration_date || "");
+    setConectadoGoogle(!!data.refresh_token);
+
+  } catch (error) {
+    console.error("❌ Error al conectar con el servidor:", error);
+    setMensaje("❌ Error al conectar con el servidor");
+  }
+};
+
 useEffect(() => {
-  if (!token || !slug) {
+  const sessionToken = sessionStorage.getItem("accessToken");
+  const sessionSlug = sessionStorage.getItem("slug");
+
+  if (!sessionToken || !sessionSlug) {
     router.push("/login");
     return;
   }
 
-  const fetchConfig = async () => {
-    console.log("🚀 Iniciando fetchConfig...");
-    try {
-      const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await res.json();
-      console.log("🔍 config recibido del backend:", data);
-
-      if (!res.ok) {
-        setMensaje("❌ Error: " + (data.error || "Error desconocido"));
-        return;
-      }
-
-      setMaxPorHora(String(data.max_per_hour || 1));
-      setMaxPorDia(String(data.max_per_day || 1));
-      setDuracionCita(String(data.duration_minutes || 30));
-
-      const porDia: { [key: string]: any } = {};
-
-      for (let i = 1; i <= 7; i++) {
-        const diaKey = String(i);
-        const dayName = dayNumberToName[diaKey];
-        const configDelDia = data.per_day_config?.[dayName];
-        const isLaborable = configDelDia?.enabled ?? (data.work_days || []).includes(dayName);
-
-        porDia[diaKey] = {
-          activo: isLaborable,
-          entrada: configDelDia?.start ?? data.start_hour ?? "08:00",
-          salida: configDelDia?.end ?? data.end_hour ?? "17:00",
-          almuerzoInicio:
-            configDelDia?.lunch?.start ?? (configDelDia?.lunch === null ? "" : "12:00"),
-          almuerzoFin:
-            configDelDia?.lunch?.end ?? (configDelDia?.lunch === null ? "" : "13:00"),
-        };
-      }
-
-      console.log("✅ configPorDia generado y listo:", porDia);
-
-      setConfigPorDia(porDia);
-      setIsActivo(data.is_active !== false);
-      setFechaVencimiento(data.expiration_date || "");
-      setConectadoGoogle(!!data.refresh_token);
-
-    } catch (error) {
-      console.error("❌ Error al conectar con el servidor:", error);
-      setMensaje("❌ Error al conectar con el servidor");
-    }
-  };
-
-  fetchConfig();
+  setToken(sessionToken);
+  setSlug(sessionSlug);
+  fetchConfig(sessionToken);
 }, []);
+
 
   const guardarConfiguracion = async () => {
   if (!token || !slug) return;
@@ -139,7 +160,7 @@ useEffect(() => {
   console.log("📤 Enviando configuración al backend:", payload);
 
   try {
-    const res = await fetch(`https://api.agenda-connect.com/api/config/${slug}`, {
+    const res = await fetch(`https://api.agenda-connect.com/api/private-config`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,

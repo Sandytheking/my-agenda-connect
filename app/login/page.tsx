@@ -12,6 +12,7 @@ export default function Login() {
 
   const router = useRouter();
 
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -35,7 +36,7 @@ export default function Login() {
       if (!res.ok) {
         setMensaje("❌ " + (data.error || "Credenciales inválidas."));
       } else {
-        sessionStorage.setItem("accessToken", data.access_token);
+        sessionStorage.setItem("accessToken", data.token);
         sessionStorage.setItem("slug", data.slug);
 
         setMensaje("✅ Bienvenido. Redirigiendo...");

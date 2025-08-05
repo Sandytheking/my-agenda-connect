@@ -3,9 +3,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { navbarText } from '@/lib/translation/navbarText';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language } = useLanguage(); // ← idioma actual
+  const t = navbarText[language];    // ← traducciones actuales
+
 
   return (
     <header className="bg-[#4c2882] text-white shadow-md fixed w-full z-50">
@@ -25,12 +30,13 @@ export default function Navbar() {
 
         <nav className="hidden md:flex space-x-6">
           <Link href="/" className="hover:text-blue-400">Inicio</Link>
-          <Link href="/registro" className="hover:text-blue-400">Registro</Link>
+          <Link href="/precios" className="hover:text-blue-400">Registro</Link>
           <Link href="/precios" className="hover:text-blue-400">Planes</Link>
           <Link href="/login" className="hover:text-blue-400">Login</Link>
           <Link href="/guia" className="hover:text-blue-400">Guia</Link>
           <Link href="/terminos" className="hover:text-blue-400">Términos</Link>
           <Link href="/privacidad" className="hover:text-blue-400">Privacidad</Link>
+        
           
         </nav>
 
@@ -52,15 +58,21 @@ export default function Navbar() {
       {menuOpen && (
   <div className="md:hidden px-6 pb-4 space-y-2 bg-[#000000]">
     <Link href="/" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Inicio</Link>
-    <Link href="/registro" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Registro</Link>
+    <Link href="/precios" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Registro</Link>
     <Link href="/precios" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Planes</Link>
     <Link href="/login" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Login</Link>
     <Link href="/guia" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Guia</Link>
     <Link href="/terminos" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Términos</Link>
     <Link href="/privacidad" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Privacidad</Link>
+  
+
   </div>
 )}
 
     </header>
   );
 }
+
+<Link href="/panel/cambiar-plan" className="text-sm text-blue-400 hover:underline">
+  Cambiar plan
+</Link>
