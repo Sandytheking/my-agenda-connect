@@ -256,9 +256,9 @@ export default function AgendaPage() {
   slug={slug}
 />
 
-
-            <div className="grid gap-4">
-              {citasFiltradas.map((cita, index) => (
+<div className="grid gap-4">
+{citasFiltradas.map((cita, index) => (
+  
 <div
   key={cita.id}
   className={`p-4 rounded shadow-md ${
