@@ -1,6 +1,5 @@
 
 //panel/cambiar-plan
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -87,15 +86,15 @@ export default function CambiarPlan() {
       if (token) {
         const decoded = parseJwt(token);
         if (decoded && decoded.id) {
-         
-const slugFromStorage = typeof window !== 'undefined' ? sessionStorage.getItem('slug') || '' : '';
-setUser({
-  id: decoded.id,
-  email: decoded.email || '',
-  plan: '',
-  slug: slugFromStorage,
-});
-
+          // leer slug del storage (tipo requerido por User)
+          const slugFromStorage = sessionStorage.getItem('slug') || '';
+          // Asignamos un objeto directo (no forma funcional) para evitar errores de tipo
+          setUser({
+            id: decoded.id,
+            email: decoded.email || '',
+            plan: '',
+            slug: slugFromStorage,
+          });
         }
       }
     }
@@ -129,7 +128,21 @@ setUser({
         const planFromServer = (data?.plan || data?.config?.plan || data?.plan_name || '').toString().toLowerCase();
         if (planFromServer) {
           setCurrentPlan(planFromServer);
-          setUser((prev) => (prev ? { ...prev, plan: planFromServer } : prev));
+          // actualizar setUser con objeto directo si user existe, o crear uno mínimo si no
+          if (user) {
+            setUser({
+              ...user,
+              plan: planFromServer,
+            });
+          } else {
+            const slugFromStorage = sessionStorage.getItem('slug') || '';
+            setUser({
+              id: (parseJwt(sessionStorage.getItem('accessToken'))?.id) || '',
+              email: (parseJwt(sessionStorage.getItem('accessToken'))?.email) || '',
+              plan: planFromServer,
+              slug: slugFromStorage,
+            });
+          }
         }
       } catch (err) {
         console.error('Error fetch plan:', err);
@@ -137,7 +150,7 @@ setUser({
         setFetchingCurrentPlan(false);
       }
     })();
-  }, [currentPlan, setUser]);
+  }, [currentPlan, setUser, user]);
 
   // Handler para cambiar plan (declarado dentro del componente)
   const handleSeleccionarPlan = async (nuevoPlan: string) => {
@@ -146,8 +159,21 @@ setUser({
       setMensaje('Actualizando tu plan...');
       setLoadingPlanChange(true);
       await updatePlanCliente(nuevoPlan);
-      // actualizar contexto user si existe
-      setUser((prev) => (prev ? { ...prev, plan: nuevoPlan } : prev));
+      // actualizar contexto user si existe (con objeto directo)
+      if (user) {
+        setUser({
+          ...user,
+          plan: nuevoPlan,
+        });
+      } else {
+        const slugFromStorage = sessionStorage.getItem('slug') || '';
+        setUser({
+          id: (parseJwt(sessionStorage.getItem('accessToken'))?.id) || '',
+          email: (parseJwt(sessionStorage.getItem('accessToken'))?.email) || '',
+          plan: nuevoPlan,
+          slug: slugFromStorage,
+        });
+      }
       setCurrentPlan(nuevoPlan);
       setMensaje('¡Plan actualizado con éxito!');
     } catch (err) {
