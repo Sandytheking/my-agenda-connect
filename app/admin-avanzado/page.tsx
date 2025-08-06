@@ -360,7 +360,7 @@ if (Object.keys(configPorDia).length === 0) {
             onClick={guardarConfiguracion}
             className="bg-green-500 text-black font-semibold py-2 px-6 rounded-full hover:bg-green-600 transition"
           >
-            Guardar
+            Guardar  
           </button>
           <button
             onClick={desconectar}

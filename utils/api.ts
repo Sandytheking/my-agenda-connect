@@ -7,6 +7,12 @@ import { supabase as supabaseSingleton } from './supabase/singleton';
 // ✅ Cliente de Supabase para componentes cliente
 const supabase = createClientComponentClient();
 
+
+// **BASE_API**: usa la env inyectada en build, si no existe usa el dominio público
+const BASE_API = (process.env.NEXT_PUBLIC_API_URL as string) || 'https://api.agenda-connect.com';
+console.log('CLIENT BASE_API =', BASE_API); // temporal: borra esto cuando confirmes que funciona
+
+
 export async function getPlanActual() {
   const {
     data: { session },
