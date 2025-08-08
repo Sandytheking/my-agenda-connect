@@ -43,6 +43,13 @@ type Cliente = {
   first_appointment?: string;
 };
 
+type ClienteRecurrente = {
+  nombre: string;
+  email: string;
+  count: number;
+};
+
+
 type AnalyticsData = {
   totalCitas: number;
   citasPorMes: Record<string, number>;
@@ -72,6 +79,7 @@ function ClientesTablas({ clientesRecurrentes = [], clientesNuevos = [] }) {
             <tbody>
               {clientesRecurrentes.map((c, index) => (
                 <tr key={`${c.email}-${index}`} className="border-t border-white">
+                  <td className="p-2">{c.nombre || '-'}</td>
                   <td className="p-2">{c.email}</td>
                   <td className="p-2">{c.count}</td>
                 </tr>
