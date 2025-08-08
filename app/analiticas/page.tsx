@@ -39,6 +39,7 @@ ChartJS.register(
 
 type Cliente = {
   email: string;
+  nombre: string;
   count: number;
   first_appointment?: string;
 };
@@ -232,7 +233,8 @@ export default function AnaliticasPage() {
   }
 
   const { totalCitas, citasPorMes, sincronizadas, noSincronizadas, clientesRecurrentes, citasPorDia, duracionPromedio, totalClientesNuevos, porcentajeClientesNuevos, clientesNuevos } = data;
-
+  const [clientesRecurrentes, setClientesRecurrentes] = useState<Cliente[]>([]);
+   \const [clientesNuevos, setClientesNuevos] = useState<Cliente[]>([]);
   const meses = Object.keys(citasPorMes || {}).sort();
   const cantidades = meses.map((m) => citasPorMes?.[m] ?? 0);
 
