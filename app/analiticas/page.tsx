@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import React from "react";
+import React from 'react';
 import { useUser } from '../../context/UserContext';
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { FaUserPlus } from 'react-icons/fa';
-import * as XLSX from "xlsx";
+import * as XLSX from 'xlsx';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,7 +18,7 @@ import {
   PointElement,
   LineElement,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js';
 import { Bar, Pie, Radar } from 'react-chartjs-2';
 import { Users, Clock, CalendarDays, FileDown } from 'lucide-react';
@@ -60,7 +60,7 @@ type AnalyticsData = {
 // Reusable tables component (tipado de props)
 function ClientesTablas({
   clientesRecurrentes = [],
-  clientesNuevos = []
+  clientesNuevos = [],
 }: {
   clientesRecurrentes?: AnaliticaCliente[];
   clientesNuevos?: AnaliticaCliente[];
@@ -127,7 +127,7 @@ function ClientesTablas({
 export default function AnaliticasPage() {
   const { user } = useUser();
   const router = useRouter();
-   
+
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [slug, setSlug] = useState<string | null>(null);
@@ -163,17 +163,17 @@ export default function AnaliticasPage() {
 
   useEffect(() => {
     // Tu lógica para cargar métricas
-    fetch("/api/metricas")
+    fetch('/api/metricas')
       .then((res) => res.json())
       .then((d) => setMetricas(d.metricas || []))
       .catch(() => setMetricas([]));
 
-    fetch("/api/dias")
+    fetch('/api/dias')
       .then((res) => res.json())
       .then((d) => setDiasData(d.dias || []))
       .catch(() => setDiasData([]));
 
-    fetch("/api/horas")
+    fetch('/api/horas')
       .then((res) => res.json())
       .then((d) => setHorasData(d.horas || []))
       .catch(() => setHorasData([]));
@@ -195,14 +195,12 @@ export default function AnaliticasPage() {
       setLoading(true);
       try {
         const res = await fetch(construirURL(), {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
 
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const json = await res.json();
-        setData(json);
+        setData(json as AnalyticsData);
       } catch (err) {
         console.error('Error cargando analíticas:', err);
         setData(null);
@@ -224,12 +222,28 @@ export default function AnaliticasPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-8">
             <div className="flex flex-col">
-              <label htmlFor="desde" className="text-sm text-gray-300 mb-1">📅 Desde</label>
-              <input type="date" id="desde" value={desde} onChange={(e) => setDesde(e.target.value)} className="bg-[#1e293b] text-white p-2 rounded border border-gray-600" />
+              <label htmlFor="desde" className="text-sm text-gray-300 mb-1">
+                📅 Desde
+              </label>
+              <input
+                type="date"
+                id="desde"
+                value={desde}
+                onChange={(e) => setDesde(e.target.value)}
+                className="bg-[#1e293b] text-white p-2 rounded border border-gray-600"
+              />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="hasta" className="text-sm text-gray-300 mb-1">📅 Hasta</label>
-              <input type="date" id="hasta" value={hasta} onChange={(e) => setHasta(e.target.value)} className="bg-[#1e293b] text-white p-2 rounded border border-gray-600" />
+              <label htmlFor="hasta" className="text-sm text-gray-300 mb-1">
+                📅 Hasta
+              </label>
+              <input
+                type="date"
+                id="hasta"
+                value={hasta}
+                onChange={(e) => setHasta(e.target.value)}
+                className="bg-[#1e293b] text-white p-2 rounded border border-gray-600"
+              />
             </div>
           </div>
 
@@ -249,7 +263,7 @@ export default function AnaliticasPage() {
     clientesNuevos = [],
     citasPorDia = {},
     totalClientesNuevos = 0,
-    porcentajeClientesNuevos = 0
+    porcentajeClientesNuevos = 0,
   } = data;
 
   // Preparar datos para gráficos/tablas
@@ -258,7 +272,7 @@ export default function AnaliticasPage() {
 
   // Alineamos dias con getDay() (0=Domingo)
   const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  const cantidadesPorDia = dias.map((d) => (citasPorDia?.[d] ?? 0));
+  const cantidadesPorDia = dias.map((d) => citasPorDia?.[d] ?? 0);
 
   const exportClientesPDF = () => {
     const doc = new jsPDF();
@@ -292,7 +306,7 @@ export default function AnaliticasPage() {
         ['% de nuevos', `${porcentajeClientesNuevos ?? 0}%`],
         ['Meses con citas registradas', Object.keys(citasPorMes || {}).length],
         ['Días únicos con citas', Object.keys(citasPorDia || {}).length],
-      ]
+      ],
     });
 
     doc.save('resumen_analiticas.pdf');
@@ -309,7 +323,7 @@ export default function AnaliticasPage() {
       ['Clientes nuevos', totalClientesNuevos ?? 0],
       ['% de nuevos Usuarios', `${porcentajeClientesNuevos ?? 0}%`],
       ['Meses con citas registradas', Object.keys(citasPorMes || {}).length],
-      ['Días únicos con citas', Object.keys(citasPorDia || {}).length]
+      ['Días únicos con citas', Object.keys(citasPorDia || {}).length],
     ];
 
     const worksheet = XLSX.utils.aoa_to_sheet(resumen);
@@ -347,48 +361,30 @@ export default function AnaliticasPage() {
           </div>
         </div>
         <div className="bg-[#1d2433] p-4 rounded-lg">
-          <div className="text-blue-400 text-2xl mb-2"><FaUserPlus /></div>
+          <div className="text-blue-400 text-2xl mb-2">
+            <FaUserPlus />
+          </div>
           <p className="text-sm text-white">Clientes nuevos</p>
           <p className="text-2xl font-bold text-white">{totalClientesNuevos}</p>
           <p className="text-sm text-white mt-1">{porcentajeClientesNuevos}%</p>
         </div>
-       
+      </div>
 
       <div className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">📅 Citas por mes</h2>
-        <Bar
-          data={{ labels: meses, datasets: [{ label: 'Citas', data: cantidades, backgroundColor: '#9333ea' }] }}
-          options={{ plugins: { legend: { display: false } } }}
-        />
+        <Bar data={{ labels: meses, datasets: [{ label: 'Citas', data: cantidades, backgroundColor: '#9333ea' }] }} options={{ plugins: { legend: { display: false } } }} />
       </div>
 
       <div className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">🔁 Estado de sincronización</h2>
         <div className="max-w-sm mx-auto">
-          <Pie
-            data={{ labels: ['Sincronizadas', 'No sincronizadas'], datasets: [{ data: [sincronizadas, noSincronizadas], backgroundColor: ['#22c55e', '#facc15'] }] }}
-            options={{ maintainAspectRatio: false }}
-            height={250}
-          />
+          <Pie data={{ labels: ['Sincronizadas', 'No sincronizadas'], datasets: [{ data: [sincronizadas, noSincronizadas], backgroundColor: ['#22c55e', '#facc15'] }] }} options={{ maintainAspectRatio: false }} height={250} />
         </div>
       </div>
 
       <div className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">📆 Citas por día de la semana</h2>
-        <Radar
-          data={{
-            labels: dias,
-            datasets: [
-              {
-                label: 'Citas',
-                data: cantidadesPorDia,
-                backgroundColor: 'rgba(139, 92, 246, 0.4)',
-                borderColor: '#8b5cf6',
-                pointBackgroundColor: '#fff',
-              },
-            ],
-          }}
-        />
+        <Radar data={{ labels: dias, datasets: [{ label: 'Citas', data: cantidadesPorDia, backgroundColor: 'rgba(139, 92, 246, 0.4)', borderColor: '#8b5cf6', pointBackgroundColor: '#fff' }] }} />
         <div className="mt-4 space-y-1 text-sm text-gray-300">
           {dias.map((d) => (
             <div key={d} className="flex justify-between border-b border-gray-600 py-1">
@@ -400,59 +396,8 @@ export default function AnaliticasPage() {
       </div>
 
       {/* Tablas: nuevos y recurrentes */}
-      <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-4">Clientes Nuevos</h2>
-        {clientesNuevos.length > 0 ? (
-          <table className="w-full text-sm text-left border-collapse">
-            <thead>
-              <tr className="border-b border-white">
-                <th className="p-2">Nombre</th>
-                <th className="p-2">Email</th>
-                <th className="p-2">Primera Cita</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientesNuevos.map((c: AnaliticaCliente, index: number) => (
-                <tr key={c.email ?? `nuevo-${index}`} className="border-t border-white">
-                  <td className="p-2">{c.nombre || '-'}</td>
-                  <td className="p-2">{c.email}</td>
-                  <td className="p-2">{c.first_appointment ?? '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="text-gray-400">No hay clientes nuevos</p>
-        )}
-      </div>
-
-      <div className="mt-8 border-t border-gray-600" />
-
-      <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-8">
-        <h2 className="text-lg font-semibold mb-4">Clientes Recurrentes</h2>
-        {clientesRecurrentes.length > 0 ? (
-          <table className="w-full text-sm text-left border-collapse">
-            <thead>
-              <tr className="border-b border-white">
-                <th className="p-2">Nombre</th>
-                <th className="p-2">Email</th>
-                <th className="p-2"># Citas</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientesRecurrentes.map((c: AnaliticaCliente, index: number) => (
-                <tr key={c.email ?? `recurrente-${index}`} className="border-t border-white">
-                  <td className="p-2">{c.nombre || '-'}</td>
-                  <td className="p-2">{c.email}</td>
-                  <td className="p-2">{c.count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="text-gray-400">No hay clientes recurrentes</p>
-        )}
-      </div>
+      <ClientesTablas clientesRecurrentes={clientesRecurrentes} clientesNuevos={clientesNuevos} />
     </div>
   );
+}
 

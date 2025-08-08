@@ -186,10 +186,13 @@ useEffect(() => {
 };
 
 
-  const conectarGoogle = () => {
-    if (!slug) return;
-    window.location.href = `https://api.agenda-connect.com/api/oauth/start?slug=${slug}`;
-  };
+ const conectarGoogle = () => {
+  if (!user?.id) {
+    console.error("❌ No se encontró el user_id");
+    return;
+  }
+  window.location.href = `https://api.agenda-connect.com/api/oauth/start?user_id=${user.id}`;
+};
 
   const desconectar = () => {
     sessionStorage.removeItem("accessToken");
