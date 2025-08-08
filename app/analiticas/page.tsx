@@ -127,7 +127,7 @@ function ClientesTablas({
 export default function AnaliticasPage() {
   const { user } = useUser();
   const router = useRouter();
-
+   
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [slug, setSlug] = useState<string | null>(null);
@@ -248,7 +248,6 @@ export default function AnaliticasPage() {
     clientesRecurrentes = [],
     clientesNuevos = [],
     citasPorDia = {},
-    duracionPromedio = 0,
     totalClientesNuevos = 0,
     porcentajeClientesNuevos = 0
   } = data;
@@ -289,7 +288,6 @@ export default function AnaliticasPage() {
         ['Citas sincronizadas con Google Calendar', sincronizadas ?? 0],
         ['Citas no sincronizadas', noSincronizadas ?? 0],
         ['Clientes recurrentes (únicos)', clientesRecurrentes?.length ?? 0],
-        ['Duración promedio de las citas', `${duracionPromedio ?? 0} minutos`],
         ['Clientes nuevos', totalClientesNuevos ?? 0],
         ['% de nuevos', `${porcentajeClientesNuevos ?? 0}%`],
         ['Meses con citas registradas', Object.keys(citasPorMes || {}).length],
@@ -308,7 +306,6 @@ export default function AnaliticasPage() {
       ['Citas sincronizadas con Google Calendar', sincronizadas ?? 0],
       ['Citas no sincronizadas', noSincronizadas ?? 0],
       ['Clientes recurrentes (únicos)', clientesRecurrentes?.length ?? 0],
-      ['Duración promedio de las citas', `${duracionPromedio ?? 0} minutos`],
       ['Clientes nuevos', totalClientesNuevos ?? 0],
       ['% de nuevos Usuarios', `${porcentajeClientesNuevos ?? 0}%`],
       ['Meses con citas registradas', Object.keys(citasPorMes || {}).length],
@@ -355,14 +352,7 @@ export default function AnaliticasPage() {
           <p className="text-2xl font-bold text-white">{totalClientesNuevos}</p>
           <p className="text-sm text-white mt-1">{porcentajeClientesNuevos}%</p>
         </div>
-        <div className="bg-[#1e293b] p-5 rounded-xl flex items-center gap-4">
-          <Clock size={32} className="text-yellow-400" />
-          <div>
-            <p className="text-sm text-gray-300">Duración promedio</p>
-            <p className="text-xl font-bold">{duracionPromedio} min</p>
-          </div>
-        </div>
-      </div>
+       
 
       <div className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">📅 Citas por mes</h2>
@@ -465,4 +455,4 @@ export default function AnaliticasPage() {
       </div>
     </div>
   );
-}
+
