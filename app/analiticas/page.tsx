@@ -37,33 +37,34 @@ ChartJS.register(
   Legend
 );
 
-type Cliente = {
-  email: string;
-  nombre: string;
-  count: number;
-  first_appointment?: string;
-};
-
-type ClienteRecurrente = {
-  nombre: string;
+// --- Types
+type AnaliticaCliente = {
+  nombre?: string;
   email: string;
   count: number;
+  first_appointment?: string | null;
 };
-
 
 type AnalyticsData = {
   totalCitas: number;
   citasPorMes: Record<string, number>;
   sincronizadas: number;
   noSincronizadas: number;
-  clientesRecurrentes: Cliente[];
+  clientesRecurrentes: AnaliticaCliente[];
   citasPorDia: Record<string, number>;
   totalClientesNuevos: number;
   porcentajeClientesNuevos: number;
-  clientesNuevos: Cliente[];
+  clientesNuevos: AnaliticaCliente[];
 };
 
-function ClientesTablas({ clientesRecurrentes = [], clientesNuevos = [] }) {
+// Reusable tables component (tipado de props)
+function ClientesTablas({
+  clientesRecurrentes = [],
+  clientesNuevos = []
+}: {
+  clientesRecurrentes?: AnaliticaCliente[];
+  clientesNuevos?: AnaliticaCliente[];
+}) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       {/* Tabla de clientes recurrentes */}
@@ -73,13 +74,14 @@ function ClientesTablas({ clientesRecurrentes = [], clientesNuevos = [] }) {
           <table className="w-full text-sm text-left border-collapse">
             <thead>
               <tr className="border-b border-white">
+                <th className="p-2">Nombre</th>
                 <th className="p-2">Email</th>
                 <th className="p-2">Citas</th>
               </tr>
             </thead>
             <tbody>
-              {clientesRecurrentes.map((c, index) => (
-                <tr key={`${c.email}-${index}`} className="border-t border-white">
+              {clientesRecurrentes.map((c: AnaliticaCliente, index: number) => (
+                <tr key={c.email ?? `recurrente-${index}`} className="border-t border-white">
                   <td className="p-2">{c.nombre || '-'}</td>
                   <td className="p-2">{c.email}</td>
                   <td className="p-2">{c.count}</td>
@@ -99,15 +101,17 @@ function ClientesTablas({ clientesRecurrentes = [], clientesNuevos = [] }) {
           <table className="w-full text-sm text-left border-collapse">
             <thead>
               <tr className="border-b border-white">
+                <th className="p-2">Nombre</th>
                 <th className="p-2">Email</th>
                 <th className="p-2">Primera Cita</th>
               </tr>
             </thead>
             <tbody>
-              {clientesNuevos.map((c, index) => (
-                <tr key={`${c.email}-${index}`} className="border-t border-white">
+              {clientesNuevos.map((c: AnaliticaCliente, index: number) => (
+                <tr key={c.email ?? `nuevo-${index}`} className="border-t border-white">
+                  <td className="p-2">{c.nombre || '-'}</td>
                   <td className="p-2">{c.email}</td>
-                  <td className="p-2">{c.first_appointment}</td>
+                  <td className="p-2">{c.first_appointment ?? '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -131,7 +135,7 @@ export default function AnaliticasPage() {
   const [desde, setDesde] = useState('');
   const [hasta, setHasta] = useState('');
 
-  // Asumiendo que usas estas variables (metricas, diasData, horasData) por el fetch en useEffect, defínelas así para evitar errores:
+  // fetch auxiliares (si los usas)
   const [metricas, setMetricas] = useState<any[]>([]);
   const [diasData, setDiasData] = useState<any[]>([]);
   const [horasData, setHorasData] = useState<any[]>([]);
@@ -161,20 +165,23 @@ export default function AnaliticasPage() {
     // Tu lógica para cargar métricas
     fetch("/api/metricas")
       .then((res) => res.json())
-      .then((data) => setMetricas(data.metricas));
+      .then((d) => setMetricas(d.metricas || []))
+      .catch(() => setMetricas([]));
 
     fetch("/api/dias")
       .then((res) => res.json())
-      .then((data) => setDiasData(data.dias));
+      .then((d) => setDiasData(d.dias || []))
+      .catch(() => setDiasData([]));
 
     fetch("/api/horas")
       .then((res) => res.json())
-      .then((data) => setHorasData(data.horas));
+      .then((d) => setHorasData(d.horas || []))
+      .catch(() => setHorasData([]));
   }, []);
 
   const construirURL = () => {
     let url = `https://api.agenda-connect.com/api/analytics/${slug}`;
-    const params = [];
+    const params: string[] = [];
     if (desde) params.push(`desde=${desde}`);
     if (hasta) params.push(`hasta=${hasta}`);
     if (params.length) url += `?${params.join('&')}`;
@@ -232,12 +239,25 @@ export default function AnaliticasPage() {
     );
   }
 
-  const { totalCitas, citasPorMes, sincronizadas, noSincronizadas, clientesRecurrentes, citasPorDia, duracionPromedio, totalClientesNuevos, porcentajeClientesNuevos, clientesNuevos } = data;
-  const [clientesRecurrentes, setClientesRecurrentes] = useState<Cliente[]>([]);
-   \const [clientesNuevos, setClientesNuevos] = useState<Cliente[]>([]);
+  // Desestructuramos todo (con defaults por seguridad)
+  const {
+    totalCitas,
+    citasPorMes = {},
+    sincronizadas = 0,
+    noSincronizadas = 0,
+    clientesRecurrentes = [],
+    clientesNuevos = [],
+    citasPorDia = {},
+    duracionPromedio = 0,
+    totalClientesNuevos = 0,
+    porcentajeClientesNuevos = 0
+  } = data;
+
+  // Preparar datos para gráficos/tablas
   const meses = Object.keys(citasPorMes || {}).sort();
   const cantidades = meses.map((m) => citasPorMes?.[m] ?? 0);
 
+  // Alineamos dias con getDay() (0=Domingo)
   const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const cantidadesPorDia = dias.map((d) => (citasPorDia?.[d] ?? 0));
 
@@ -249,7 +269,7 @@ export default function AnaliticasPage() {
     autoTable(doc, {
       startY: 30,
       head: [['Email', 'Cantidad de Citas']],
-      body: clientesRecurrentes.map((c) => [c.email, c.count]),
+      body: (clientesRecurrentes || []).map((c) => [c.email, c.count]),
     });
 
     doc.save('clientes_recurrentes.pdf');
@@ -326,7 +346,7 @@ export default function AnaliticasPage() {
           <Users size={32} className="text-green-400" />
           <div>
             <p className="text-sm text-gray-300">Clientes recurrentes</p>
-            <p className="text-xl font-bold">{clientesRecurrentes?.length || 0}</p>
+            <p className="text-xl font-bold">{clientesRecurrentes?.length ?? 0}</p>
           </div>
         </div>
         <div className="bg-[#1d2433] p-4 rounded-lg">
@@ -364,88 +384,85 @@ export default function AnaliticasPage() {
       </div>
 
       <div className="mb-12">
-    <h2 className="text-2xl font-semibold mb-4">📆 Citas por día de la semana</h2>
-    <Radar
-      data={{
-        labels: dias,
-        datasets: [
-          {
-            label: 'Citas',
-            data: cantidadesPorDia,
-            backgroundColor: 'rgba(139, 92, 246, 0.4)',
-            borderColor: '#8b5cf6',
-            pointBackgroundColor: '#fff',
-          },
-        ],
-      }}
-    />
-    {/* Opcional: mostrar listado con keys únicas para evitar warnings */}
-    <div className="mt-4 space-y-1 text-sm text-gray-300">
-      {dias.map(d => (
-        <div key={d} className="flex justify-between border-b border-gray-600 py-1">
-          <span>{d}</span>
-          <span>{citasPorDia[d] ?? 0}</span>
+        <h2 className="text-2xl font-semibold mb-4">📆 Citas por día de la semana</h2>
+        <Radar
+          data={{
+            labels: dias,
+            datasets: [
+              {
+                label: 'Citas',
+                data: cantidadesPorDia,
+                backgroundColor: 'rgba(139, 92, 246, 0.4)',
+                borderColor: '#8b5cf6',
+                pointBackgroundColor: '#fff',
+              },
+            ],
+          }}
+        />
+        <div className="mt-4 space-y-1 text-sm text-gray-300">
+          {dias.map((d) => (
+            <div key={d} className="flex justify-between border-b border-gray-600 py-1">
+              <span>{d}</span>
+              <span>{citasPorDia[d] ?? 0}</span>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  </div>
+      </div>
 
-{/* Tabla de clientes nuevos */}
-<div className="bg-gray-800 p-4 rounded-lg shadow-md">
-  <h2 className="text-lg font-semibold mb-4">Clientes Nuevos</h2>
-  {clientesNuevos.length > 0 ? (
-    <table className="w-full text-sm text-left border-collapse">
-      <thead>
-        <tr className="border-b border-white">
-          <th className="p-2">Nombre</th>
-          <th className="p-2">Email</th>
-          <th className="p-2">Primera Cita</th>
-        </tr>
-      </thead>
-      <tbody>
-        {clientesNuevos.map((c, index) => (
-          <tr key={`${c.email}-${index}`} className="border-t border-white">
-            <td className="p-2">{c.nombre || '-'}</td>
-            <td className="p-2">{c.email}</td>
-            <td className="p-2">{c.first_appointment}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  ) : (
-    <p className="text-gray-400">No hay clientes nuevos</p>
-  )}
-</div>
+      {/* Tablas: nuevos y recurrentes */}
+      <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold mb-4">Clientes Nuevos</h2>
+        {clientesNuevos.length > 0 ? (
+          <table className="w-full text-sm text-left border-collapse">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="p-2">Nombre</th>
+                <th className="p-2">Email</th>
+                <th className="p-2">Primera Cita</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clientesNuevos.map((c: AnaliticaCliente, index: number) => (
+                <tr key={c.email ?? `nuevo-${index}`} className="border-t border-white">
+                  <td className="p-2">{c.nombre || '-'}</td>
+                  <td className="p-2">{c.email}</td>
+                  <td className="p-2">{c.first_appointment ?? '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-400">No hay clientes nuevos</p>
+        )}
+      </div>
 
-{/* Separación visual entre tablas */}
-<div className="mt-8 border-t border-gray-600" />
+      <div className="mt-8 border-t border-gray-600" />
 
-{/* Tabla de clientes recurrentes */}
-<div className="bg-gray-800 p-4 rounded-lg shadow-md mt-8">
-  <h2 className="text-lg font-semibold mb-4">Clientes Recurrentes</h2>
-  {clientesRecurrentes.length > 0 ? (
-    <table className="w-full text-sm text-left border-collapse">
-      <thead>
-        <tr className="border-b border-white">
-          <th className="p-2">Nombre</th>
-          <th className="p-2">Email</th>
-          <th className="p-2"># Citas</th>
-        </tr>
-      </thead>
-      <tbody>
-        {clientesRecurrentes.map((c, index) => (
-          <tr key={`${c.email}-${index}`} className="border-t border-white">
-            <td className="p-2">{c.nombre || '-'}</td>
-            <td className="p-2">{c.email}</td>
-            <td className="p-2">{c.count}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  ) : (
-    <p className="text-gray-400">No hay clientes recurrentes</p>
-  )}
-</div>
+      <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-8">
+        <h2 className="text-lg font-semibold mb-4">Clientes Recurrentes</h2>
+        {clientesRecurrentes.length > 0 ? (
+          <table className="w-full text-sm text-left border-collapse">
+            <thead>
+              <tr className="border-b border-white">
+                <th className="p-2">Nombre</th>
+                <th className="p-2">Email</th>
+                <th className="p-2"># Citas</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clientesRecurrentes.map((c: AnaliticaCliente, index: number) => (
+                <tr key={c.email ?? `recurrente-${index}`} className="border-t border-white">
+                  <td className="p-2">{c.nombre || '-'}</td>
+                  <td className="p-2">{c.email}</td>
+                  <td className="p-2">{c.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-400">No hay clientes recurrentes</p>
+        )}
+      </div>
     </div>
   );
 }
