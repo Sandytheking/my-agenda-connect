@@ -26,32 +26,46 @@ export function useRegistro() {
   const [slugMensaje, setSlugMensaje] = useState("");
 
   const validarSlug = async () => {
-    const limpio = slug.trim().toLowerCase();
-    if (!limpio) {
-      setSlugStatus(null);
-      setSlugMensaje("");
-      return;
-    }
+  // Solo letras, números y guiones
+  const limpio = slug
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, ""); // elimina caracteres no permitidos
 
-    setSlugStatus("checking");
-    setSlugMensaje("Verificando...");
+  setSlug(limpio); // actualiza el campo con el texto limpio
 
-    try {
-      const res = await fetch(`https://api.agenda-connect.com/api/slug-exists/${limpio}`);
-      const data = await res.json();
+  if (!limpio) {
+    setSlugStatus(null);
+    setSlugMensaje("");
+    return;
+  }
 
-      if (data.exists) {
-        setSlugStatus("error");
-        setSlugMensaje(`⛔ “${limpio}” ya está en uso`);
-      } else {
-        setSlugStatus("ok");
-        setSlugMensaje(`✅ “${limpio}” está disponible`);
-      }
-    } catch (error) {
+  // Verificar si tiene formato válido (ej: no empieza o termina con "-")
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(limpio)) {
+    setSlugStatus("error");
+    setSlugMensaje("⛔ Solo letras, números y guiones. No puede iniciar o terminar con '-'.");
+    return;
+  }
+
+  setSlugStatus("checking");
+  setSlugMensaje("Verificando...");
+
+  try {
+    const res = await fetch(`https://api.agenda-connect.com/api/slug-exists/${limpio}`);
+    const data = await res.json();
+
+    if (data.exists) {
       setSlugStatus("error");
-      setSlugMensaje("⛔ Error al verificar el slug.");
+      setSlugMensaje(`⛔ “${limpio}” ya está en uso`);
+    } else {
+      setSlugStatus("ok");
+      setSlugMensaje(`✅ “${limpio}” está disponible`);
     }
-  };
+  } catch (error) {
+    setSlugStatus("error");
+    setSlugMensaje("⛔ Error al verificar el slug.");
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

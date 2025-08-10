@@ -87,9 +87,14 @@ export default function RegistroForm() {
           className="mr-2"
         />
         Acepto los{" "}
-        <a href="/terminos" className="ml-1 underline text-blue-400 hover:text-blue-300">
-          Términos y Condiciones
-        </a>
+        <a 
+  href="/terminos" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="ml-1 underline text-blue-400 hover:text-blue-300"
+>
+  Términos y Condiciones
+</a>
       </label>
 
       {mensaje && <div className="text-sm text-center text-red-400 font-medium">{mensaje}</div>}

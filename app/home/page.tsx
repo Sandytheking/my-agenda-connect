@@ -59,7 +59,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                 <Link
-                  href="/registro"
+                  href="/precios"
                   className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg transition"
                 >
                   🚀 Comenzar gratis
