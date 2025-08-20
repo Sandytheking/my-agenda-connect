@@ -119,7 +119,7 @@ export default function HomePage() {
                     <th className="p-3 border border-white/10">Características</th>
                     <th className="p-3 border border-white/10">Agenda Connect</th>
                     <th className="p-3 border border-white/10">Competidores</th>
-                    <th className="p-3 border border-white/10">Google Calendar</th>
+                    <th className="p-3 border border-white/10">La Competencia</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -286,6 +286,78 @@ export default function HomePage() {
               </div>
             </div>
           </motion.section>
+
+
+<div className="w-full max-w-2xl mx-auto p-6 bg-black rounded-2xl">
+  {/* Título con glow */}
+  <h2
+    className="text-3xl font-bold text-center mb-6 
+               text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-500 to-purple-600 
+               animate-glow"
+  >
+  Contáctanos
+  </h2>
+
+  <form
+    className="grid gap-6"
+    onSubmit={async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const name = form[0].value;
+      const email = form[1].value;
+      const message = form[2].value;
+
+      const res = await fetch("https://api.agenda-connect.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("✅ Tu mensaje fue enviado con éxito");
+        form.reset();
+      } else {
+        alert("❌ Hubo un error al enviar tu mensaje");
+      }
+    }}
+  >
+    <div className="grid md:grid-cols-2 gap-6">
+      <input
+        type="text"
+        placeholder="Tu nombre"
+        className="p-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-400"
+        required
+      />
+      <input
+        type="email"
+        placeholder="Tu correo"
+        className="p-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-400"
+        required
+      />
+    </div>
+
+    <textarea
+      placeholder="Escribe tu mensaje..."
+      rows={5}
+      className="p-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-400"
+      required
+    />
+
+    <motion.button
+      type="submit"
+      className="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 px-8 rounded-xl 
+                 transition shadow-lg animate-glow"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      Enviar mensaje
+    </motion.button>
+  </form>
+</div>
+
+
 
   
         </div>

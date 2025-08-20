@@ -25,7 +25,7 @@ const planes = [
   {
     key: "pro",
     nombre: "Pro",
-    precio: "$9.99",
+    precio: "$0.00",
     descripcion: "Perfecto para negocios pequeños.",
     beneficios: [
       "Sin límite de citas",
@@ -39,7 +39,7 @@ const planes = [
   {
     key: "business",
     nombre: "Negocio",
-    precio: "$19.99",
+    precio: "$0.00",
     descripcion: "Para equipos o empresas.",
     beneficios: [
       "Todo en el plan Pro",
