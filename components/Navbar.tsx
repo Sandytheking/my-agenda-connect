@@ -30,6 +30,7 @@ export default function Navbar() {
 
         <nav className="hidden md:flex space-x-6">
           <Link href="/" className="hover:text-blue-400">Inicio</Link>
+          <Link href="/acerca" className="hover:text-blue-400">Acerca de</Link>
           <Link href="/precios" className="hover:text-blue-400">Registro</Link>
           <Link href="/login" className="hover:text-blue-400">Login</Link>
           <Link href="/precios" className="hover:text-blue-400">Planes</Link>
@@ -58,6 +59,7 @@ export default function Navbar() {
       {menuOpen && (
   <div className="md:hidden px-6 pb-4 space-y-2 bg-[#000000]">
     <Link href="/" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Inicio</Link>
+    <Link href="/acerca" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Acerca de</Link>
     <Link href="/precios" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Registro</Link>
     <Link href="/login" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Login</Link>
     <Link href="/precios" className="block hover:text-blue-400" onClick={() => setMenuOpen(false)}>Planes</Link>

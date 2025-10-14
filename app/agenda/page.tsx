@@ -235,10 +235,7 @@ useEffect(() => {
           🔒 Cerrar sesión
         </button>
 
-        {/* Advertencia: recibe slug y plan (toma en cuenta el fallback desde sessionStorage si user no estaba presente) */}
-        <div className="mx-4">
-          <AdvertenciaLimiteCitas slug={slug} plan={plan} />
-        </div>
+
 
         <button
           onClick={() => {
@@ -286,11 +283,21 @@ useEffect(() => {
           })}
         </div>
 
+
         {slug && (
-          <Link href="/panel/cambiar-plan" className="bg-purple-600 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-full">
-            Cambiar plan
-          </Link>
-        )}
+  <div className="flex justify-left items-left gap-4 mb-4">
+    <Link
+      href="/panel/cambiar-plan"
+      className="bg-green-600 hover:bg-purple-600 text-white font-medium px-4 py-2 rounded-full"
+    >
+      Cambiar plan
+    </Link>
+
+    <AdvertenciaLimiteCitas slug={slug} plan={plan} />
+  </div>
+)}
+
+
 
         {mensaje && <div className="bg-red-600 text-white px-4 py-3 rounded mb-6 text-center font-medium">{mensaje}</div>}
 

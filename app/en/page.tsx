@@ -47,7 +47,7 @@ export default function HomePageEn() {
                 Agenda Connect
               </h1>
               <p className="text-xl text-white/90 mb-6">
-                Manage your bookings smartly. Agenda Connect syncs with Google Calendar, sends instant notifications, and offers a full-featured admin panel.
+                Appointment management system for businesses: beauty salons, spas, barber shops, medical office, and all types of appointment-based businesses.Manage your bookings smartly. Agenda Connect syncs with Google Calendar, sends instant notifications, and offers a full-featured admin panel.
               </p>
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                 <Link
@@ -103,18 +103,18 @@ export default function HomePageEn() {
                     <th className="p-3 border border-white/10">Features</th>
                     <th className="p-3 border border-white/10">Agenda Connect</th>
                     <th className="p-3 border border-white/10">Competitors</th>
-                    <th className="p-3 border border-white/10">Google Calendar</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    ["Unlimited bookings", "✅", "❌", "❌"],
-                    ["Admin panel", "✅", "✅", "❌"],
-                    ["WhatsApp Integration", "🛠️ Coming soon", "❌", "❌"],
-                    ["Automatic notifications", "✅", "✅", "✅"],
-                    ["Support in Spanish", "✅", "✅", "❌"],
-                    ["Export to Excel/PDF", "✅", "❌", "❌"],
-                    ["Appointment analytics panel", "✅", "❌", "❌"]
+                    ["Unlimited bookings", "✅", "❌"],
+                    ["Admin panel", "✅", "✅"],
+                    ["WhatsApp Integration", "🛠️ Coming soon", "❌"],
+                    ["Automatic notifications", "✅", "✅"],
+                    ["Support in Spanish", "✅", "✅",],
+                    ["Export to Excel/PDF", "✅", "❌"],
+                    ["Appointment analytics panel", "✅", "❌"]
                   ].map((row, i) => (
                     <tr key={i} className={i % 2 === 0 ? "bg-white/5" : "bg-white/10"}>
                       {row.map((cell, j) => (
@@ -264,6 +264,83 @@ export default function HomePageEn() {
               </div>
             </div>
           </motion.section>
+
+
+ {/* ✨ Contacto */}
+          <section className="min-h-screen flex items-center justify-center">
+            <div className="w-full max-w-2xl mx-auto p-6 bg-black rounded-2xl">
+              <h2
+                className="text-3xl font-bold text-center mb-6 
+                           text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-500 to-purple-600 
+                           animate-glow"
+              >
+                Contact Us
+              </h2>
+
+              <form
+                className="grid gap-6"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+
+                  const form = e.target as HTMLFormElement;
+                  const formData = new FormData(form);
+
+                  const name = formData.get("name") as string;
+                  const email = formData.get("email") as string;
+                  const message = formData.get("message") as string;
+
+                   const res = await fetch("https://api.agenda-connect.com/api/contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, message }),
+                  });
+
+                  const data = await res.json();
+                  if (data.success) {
+                    alert("✅ Tu mensaje fue enviado con éxito");
+                    form.reset();
+                  } else {
+                    alert("❌ Hubo un error al enviar tu mensaje");
+                  }
+                }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your name"
+                    className="p-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-400"
+                    required
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    className="p-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-400"
+                    required
+                  />
+                </div>
+
+                <textarea
+                  name="message"
+                  placeholder="Write your mensaje..."
+                  rows={5}
+                  className="p-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-purple-400"
+                  required
+                />
+
+                <motion.button
+                  type="submit"
+                  className="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 px-8 rounded-xl 
+                             transition shadow-lg animate-glow"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Send Message
+                </motion.button>
+              </form>
+            </div>
+          </section>
         </div>
       </main>
     </div>

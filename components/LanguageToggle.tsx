@@ -10,12 +10,12 @@ export default function LanguageToggle() {
   const router = useRouter()
 
   const handleToggle = () => {
-    if (pathname.startsWith('/home/en')) {
+    if (pathname.startsWith('/en')) {
       // Estás en inglés → redirige al español
-      router.push('/home')
+      router.push('/')
     } else {
       // Estás en español → redirige al inglés
-      router.push('/home/en')
+      router.push('/en')
     }
   }
 

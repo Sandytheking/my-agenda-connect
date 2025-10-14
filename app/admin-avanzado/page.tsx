@@ -279,24 +279,41 @@ export default function AdminAvanzado() {
     <div className="bg-[#4c2882] p-10 rounded-2xl shadow-md w-full max-w-3xl border border-gray-700">
       <h1 className="text-3xl font-bold text-center mb-6">Panel Avanzado de Administración</h1>
 
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <a
-          href={`https://api.agenda-connect.com/form.html?slug=${slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            backgroundColor: "#097969",
-            color: "white",
-            padding: "7px 15px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontWeight: "bold",
-            display: "inline-block"
-          }}
-        >
-          Tu link
-        </a>
-      </div>
+{/* Contenedor de los dos botones superiores */}
+<div className="flex justify-between items-center w-full max-w-md mx-auto mb-6 space-x-4">
+  {/* Botón izquierda */}
+  <a
+    href={`https://api.agenda-connect.com/form.html?slug=${slug}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-[#ffffff] text-black font-semibold px-6 py-2 rounded-full hover:bg-[#bfff00] transition text-center flex-1 text-center"
+  >
+    Tu link
+  </a>
+
+  {/* Botón derecha */}
+  <button
+    onClick={irAgenda}
+    className="bg-white text-black font-semibold px-7 py-2 rounded-full hover:bg-[#bfff00] hover:text-purple transition flex-1 text-center"
+  >
+    📅 Citas
+  </button>
+</div>
+
+{/* Botón centrado (Google) */}
+<div className="flex justify-center">
+  <button
+    onClick={conectarGoogle}
+    className="bg-white text-black font-semibold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-yellow-500 shadow-md transition"
+  >
+    <img src="/google-icon2.png" className="w-5 h-5" alt="Google" />
+    Google Calendar
+  </button>
+</div>
+
+
+
+
 
       {/* Mensaje de suscripción vencida */}
       {(!isActivo || (fechaVencimiento && new Date(fechaVencimiento) < new Date())) && (
@@ -439,7 +456,7 @@ export default function AdminAvanzado() {
           onClick={irAgenda}
           className="bg-white text-black font-semibold px-6 py-2 rounded-full hover:bg-[#097969]"
         >
-          📅 Ver mis citas
+          📅 Ver Citas
         </button>
       </div>
 

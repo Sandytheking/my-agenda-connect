@@ -84,6 +84,10 @@ export function useRegistro() {
     setMensaje("Creando cuenta...");
 
     try {
+
+       // Obtener timezone automáticamente
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       const res = await fetch("https://api.agenda-connect.com/api/registro", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,6 +98,7 @@ export function useRegistro() {
           slug,
           plan: selectedPlan,
           accepted_terms: true,
+          timezone,
         }),
       });
 

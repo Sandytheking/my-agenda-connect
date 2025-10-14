@@ -55,7 +55,7 @@ export default function HomePage() {
                 Agenda Connect
               </h1>
               <p className="text-xl text-white/90 mb-6">
-                Gestiona tus reservas de forma inteligente. Agenda Connect sincroniza tus citas con Google Calendar, envía notificaciones instantáneas y te ofrece un panel administrativo para tener el control total.
+                Sistema de gestion de citas para negocios: Salon de belleza, Spa, Peluqueria, Consultorio Medico, & todo tipo de negocios que trabaje por citas. Agenda Connect sincroniza tus citas con Google Calendar, envía notificaciones instantáneas y te ofrece un panel administrativo para tener el control total.
               </p>
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                 <Link
@@ -119,18 +119,18 @@ export default function HomePage() {
                     <th className="p-3 border border-white/10">Características</th>
                     <th className="p-3 border border-white/10">Agenda Connect</th>
                     <th className="p-3 border border-white/10">Competidores</th>
-                    <th className="p-3 border border-white/10">La Competencia</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    ["Citas ilimitadas", "✅", "❌", "❌"],
-                    ["Panel administrativo", "✅", "✅", "❌"],
-                    ["Integración WhatsApp", "🛠️ En camino", "❌", "❌"],
-                    ["Notificaciones automáticas", "✅", "✅", "✅"],
-                    ["Soporte en español", "✅", "✅", "❌"],
-                    ["Exportar citas a Excel/PDF", "✅", "❌", "❌"],
-                    ["Panel de analíticas de citas", "✅", "❌", "❌"]
+                    ["Citas ilimitadas", "✅", "❌"],
+                    ["Panel administrativo", "✅", "✅"],
+                    ["Integración WhatsApp", "🛠️ En camino", "❌"],
+                    ["Notificaciones automáticas", "✅", "✅"],
+                    ["Soporte en español", "✅", "✅",],
+                    ["Exportar citas a Excel/PDF", "✅", "❌"],
+                    ["Panel de analíticas de citas", "✅", "❌"]
                   ].map((row, i) => (
                     <tr key={i} className={i % 2 === 0 ? "bg-white/5" : "bg-white/10"}>
                       {row.map((cell, j) => (
