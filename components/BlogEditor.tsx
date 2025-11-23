@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
+import "./blog-editor-dark.css";
+
 
 // cargar Tiptap dinámicamente (evita SSR)
 const EditorContent = dynamic(() => import('@tiptap/react').then(m => m.EditorContent), { ssr: false });
