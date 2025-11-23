@@ -1,6 +1,10 @@
 
 //app/blog/[slug]/page.tsx
-export default async function PostPage({ params }: { params: { slug: string } }) {
+interface Props {
+  params: { slug: string };
+}
+
+export default async function PostPage({ params }: Props) {
   const { slug } = params;
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${slug}`, {
