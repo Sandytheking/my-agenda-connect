@@ -7,6 +7,8 @@ import SupabaseProvider from '@/components/SupabaseProvider';
 import { LanguageProvider } from '@/context/LanguageContext';
 import Footer from '@/components/Footer'; // 👈 Importa el footer
 import WhatsAppButton from '@/components/WhatsAppButton';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import Script from 'next/script'; // 👈 Importante Google anality
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +28,21 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <head>
+
+        {/* Google tag (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-M4F715H5QP"
+        />
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-M4F715H5QP');
+          `}
+        </Script>
+        
         {/* 👇 Enlace a los íconos Font Awesome */}
         <link
           rel="stylesheet"
@@ -42,6 +59,7 @@ export default function RootLayout({
             <WhatsAppButton />
           </SupabaseProvider>
         </LanguageProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

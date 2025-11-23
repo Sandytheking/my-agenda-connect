@@ -44,7 +44,7 @@ export default function Footer() {
               <i className="fab fa-instagram text-2xl"></i>
             </a>
             <a
-              href="https://www.facebook.com/me/"
+              href="https://www.facebook.com/profile.php?id=61579874750346"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#A020F0] transition"
