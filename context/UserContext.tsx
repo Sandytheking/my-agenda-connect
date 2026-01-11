@@ -2,8 +2,9 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/singleton';
+import { useSupabase } from '@/components/SupabaseProvider';
 
-type User = {
+export type User = {
   id: string;
   email: string;
   slug: string;
@@ -24,86 +25,44 @@ const UserContext = createContext<UserContextType>({
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const { session } = useSupabase(); // 🔑 sesión única
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserData = async () => {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const session = sessionData?.session;
-
-  if (session?.user) {
-    console.log('📡 Session activa en Supabase:', session);
-
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('user_id', session.user.id)
-      .single();
-
-    console.log('📋 Resultado de buscar en clients:', { data, error });
-
-    if (error || !data) {
-      console.error('❌ Error al obtener cliente o no se encontró:', error);
-      setUser(null);
-    } else {
-      setUser({
-        id: session.user.id,
-        email: session.user.email,
-        ...data,
-      });
-    }
-  } else {
-    console.log('🔍 No hay sesión en Supabase, buscando token en sessionStorage...');
-    const token = typeof window !== 'undefined' ? sessionStorage.getItem('accessToken') : null;
-
-    if (token) {
-      try {
-        const res = await fetch("https://api.agenda-connect.com/api/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          
-
-          setUser(data.user);
-        } else {
-          console.warn("⚠️ Token inválido al recuperar usuario desde backend.");
-          sessionStorage.clear();
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("❌ Error al rehidratar desde backend:", error);
-        setUser(null);
-      }
-    } else {
-      console.log('🚫 No hay token en sessionStorage.');
-      setUser(null);
-    }
-  }
-
-  setLoading(false);
-};
-
   useEffect(() => {
-    fetchUserData(); // Inicial
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('🔄 Cambio en la sesión:', session);
-      if (session) {
-        fetchUserData();
-      } else {
+    const loadUser = async () => {
+      // 🚫 No hay sesión → no hay usuario
+      if (!session?.user) {
         setUser(null);
         setLoading(false);
+        return;
       }
-    });
 
-    return () => {
-      listener.subscription.unsubscribe();
+      setLoading(true);
+
+      // 🔎 Buscar perfil extendido
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (error || !data) {
+        console.error('❌ Error cargando perfil del cliente:', error);
+        setUser(null);
+      } else {
+        setUser({
+          id: session.user.id,
+          email: session.user.email!,
+          ...data,
+        });
+      }
+
+      setLoading(false);
     };
-  }, []);
+
+    loadUser();
+  }, [session]);
 
   return (
     <UserContext.Provider value={{ user, loading, setUser }}>

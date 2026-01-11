@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,80 +11,79 @@ export default function Login() {
 
   const router = useRouter();
 
+  // 🔐 Si ya está logueado, ir directo a agenda
+  useEffect(() => {
+    const token = sessionStorage.getItem("accessToken");
+    const slug = sessionStorage.getItem("slug");
 
-  // Login.tsx (solo el handleLogin modificado)
-const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault();
+    if (token && slug) {
+      router.replace("/agenda");
+    }
+  }, [router]);
 
-  if (!email || !password) {
-    setMensaje("⚠️ Email y contraseña obligatorios.");
-    return;
-  }
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  setCargando(true);
-  setMensaje("Verificando...");
-
-  try {
-    const res = await fetch("https://api.agenda-connect.com/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok) {
-      setMensaje("❌ " + (data?.error || "Credenciales inválidas."));
+    if (!email || !password) {
+      setMensaje("⚠️ Email y contraseña obligatorios.");
       return;
     }
 
-    // Diferentes backends pueden devolver:
-    // { token, slug, user }  OR  { access_token, slug } OR { session: { access_token }, slug }
-    const token =
-      data?.token ||
-      data?.access_token ||
-      data?.session?.access_token ||
-      data?.session?.accessToken;
+    setCargando(true);
+    setMensaje("Verificando...");
 
-    const slug = data?.slug || data?.config?.slug || data?.user?.slug;
+    try {
+      const res = await fetch("https://api.agenda-connect.com/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!token) {
-      console.warn("Login OK pero no vino token. Respuesta completa:", data);
-      setMensaje("❌ Login exitoso pero no se recibió token (revisa backend).");
-      return;
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        setMensaje("❌ " + (data?.error || "Credenciales inválidas."));
+        return;
+      }
+
+      const token =
+        data?.token ||
+        data?.access_token ||
+        data?.session?.access_token ||
+        data?.session?.accessToken;
+
+      const slug = data?.slug || data?.config?.slug || data?.user?.slug;
+
+      if (!token) {
+        setMensaje("❌ Login exitoso pero no se recibió token.");
+        return;
+      }
+
+      sessionStorage.setItem("accessToken", token);
+      if (slug) sessionStorage.setItem("slug", slug);
+
+      setMensaje("✅ Bienvenido. Redirigiendo...");
+      setTimeout(() => router.push("/agenda"), 700);
+    } catch (err) {
+      console.error(err);
+      setMensaje("❌ Error al conectar con el servidor.");
+    } finally {
+      setCargando(false);
     }
-
-    // Guarda en sessionStorage para que otras páginas lo lean
-    sessionStorage.setItem("accessToken", token);
-    if (slug) sessionStorage.setItem("slug", slug);
-    else console.warn("Login: slug no provisto en la respuesta de login.");
-
-    // Opcional: si usas UserContext y tienes setUser, setéalo aquí:
-    // if (typeof setUser === 'function' && data?.user) setUser(data.user);
-
-    setMensaje("✅ Bienvenido. Redirigiendo...");
-    setTimeout(() => router.push("/admin-avanzado"), 700);
-  } catch (err) {
-    console.error("handleLogin error:", err);
-    setMensaje("❌ Error al conectar con el servidor.");
-  } finally {
-    setCargando(false);
-  }
-};
+  };
 
   return (
-   <div className="min-h-screen flex items-center justify-center bg-[#000000] px-4 text-white">
-    
+    <div className="min-h-screen flex items-center justify-center bg-black px-4 text-white">
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md space-y-6 bg-[#4c2882] p-8 rounded-xl shadow-md bg-opacity-90"
+        className="w-full max-w-md space-y-6 bg-[#4c2882] p-8 rounded-xl shadow-md"
       >
         <h1 className="text-2xl font-bold text-center">Iniciar Sesión</h1>
 
         <input
           type="email"
           placeholder="Correo electrónico"
-          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-md bg-white text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -93,55 +91,34 @@ const handleLogin = async (e: React.FormEvent) => {
         <input
           type="password"
           placeholder="Contraseña"
-          className="w-full px-4 py-2 border border-gray-400 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-md bg-white text-black"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         {mensaje && (
-          <div className="text-sm text-center text-green-400 font-medium">{mensaje}</div>
+          <div className="text-sm text-center text-green-300 font-medium">
+            {mensaje}
+          </div>
         )}
 
         <button
           type="submit"
           disabled={cargando}
-          className={`w-full py-2 font-semibold rounded-md transition flex items-center justify-center ${
+          className={`w-full py-2 font-semibold rounded-md transition ${
             cargando
-              ? "bg-gray-500 text-white cursor-not-allowed"
-              : "bg-green-400 text-white hover:bg-green-600"
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-green-400 hover:bg-green-600"
           }`}
         >
-
-          {cargando && (
-            <svg
-              className="animate-spin mr-2 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
-              ></path>
-            </svg>
-          )}
           {cargando ? "Ingresando..." : "Iniciar Sesión"}
         </button>
-        <div className="text-center mt-4">
-  <a href="/olvide-contrasena" className="text-sm text-blue-400 hover:underline">
-    ¿Olvidaste tu contraseña?
-  </a>
-</div>
 
+        <div className="text-center mt-4">
+          <a href="/olvide-contrasena" className="text-sm text-blue-400 hover:underline">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
       </form>
     </div>
   );

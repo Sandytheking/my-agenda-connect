@@ -39,7 +39,7 @@ const planes = [
   {
     nombre: 'Pro',
     descripcion: 'Funciones avanzadas',
-    precio: '$9.99/mes',
+    precio: '$4.99/mes',
     caracteristicas: [
       'Citas ilimitadas',
       '1 usuario',
@@ -51,7 +51,7 @@ const planes = [
   {
     nombre: 'Business',
     descripcion: 'Para equipos grandes',
-    precio: '$19/mes',
+    precio: '$9.99/mes',
     caracteristicas: [
       'Citas ilimitadas',
       '1 usuarios',

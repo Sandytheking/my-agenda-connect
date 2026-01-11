@@ -129,3 +129,203 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* ================================
+   📅 AGENDA CONNECT – CALENDAR PRO
+================================ */
+
+/* Toolbar container */
+.rbc-toolbar {
+  background: linear-gradient(
+    135deg,
+    oklch(0.488 0.243 264.376 / 0.25),
+    oklch(0.627 0.265 303.9 / 0.25)
+  );
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 1px solid oklch(1 0 0 / 10%);
+  backdrop-filter: blur(8px);
+}
+
+/* Toolbar label (Mes / Semana / Día) */
+.rbc-toolbar-label {
+  color: oklch(0.985 0 0);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Toolbar buttons */
+.rbc-toolbar button {
+  background: oklch(1 0 0 / 8%);
+  color: oklch(0.985 0 0);
+  border-radius: 10px;
+  border: 1px solid oklch(1 0 0 / 15%);
+  padding: 6px 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.rbc-toolbar button:hover {
+  background: oklch(0.488 0.243 264.376 / 0.35);
+}
+
+/* Active */
+.rbc-toolbar button.rbc-active {
+  background: linear-gradient(
+    135deg,
+    oklch(0.488 0.243 264.376),
+    oklch(0.627 0.265 303.9)
+  );
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 8px 20px oklch(0.488 0.243 264.376 / 0.4);
+}
+
+/* Today highlight */
+.rbc-today {
+  background: oklch(0.488 0.243 264.376 / 0.18) !important;
+}
+
+/* Headers (días) */
+.rbc-header {
+  background: oklch(1 0 0 / 4%);
+  color: oklch(0.985 0 0);
+  font-weight: 600;
+  padding: 8px;
+  border-bottom: 1px solid oklch(1 0 0 / 10%);
+}
+
+/* Time gutter */
+.rbc-time-gutter {
+  background: oklch(1 0 0 / 3%);
+  color: oklch(0.708 0 0);
+}
+
+/* Calendar container */
+.rbc-time-view,
+.rbc-month-view {
+  background: oklch(1 0 0 / 3%);
+  border-radius: 16px;
+  border: 1px solid oklch(1 0 0 / 10%);
+  overflow: hidden;
+}
+
+/* Overlay popup */
+.rbc-overlay {
+  background: oklch(0.205 0 0);
+  border-radius: 14px;
+  border: 1px solid oklch(1 0 0 / 15%);
+  color: white;
+}
+
+/* ================================
+   🔧 FIX CONTRASTE CALENDARIO
+================================ */
+
+/* Texto principal del toolbar */
+.rbc-toolbar-label {
+  color: white !important;
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+
+/* Botones */
+.rbc-toolbar button {
+  background: oklch(1 0 0 / 14%) !important;
+  color: white !important;
+  font-weight: 700;
+}
+
+/* Hover */
+.rbc-toolbar button:hover {
+  background: oklch(0.488 0.243 264.376 / 0.45) !important;
+}
+
+/* Active (Hoy seleccionado) */
+.rbc-toolbar button.rbc-active {
+  background: linear-gradient(
+    135deg,
+    oklch(0.488 0.243 264.376),
+    oklch(0.627 0.265 303.9)
+  ) !important;
+  color: white !important;
+}
+
+/* Headers de días */
+.rbc-header {
+  color: white !important;
+  font-weight: 700;
+}
+
+/* Horas */
+.rbc-time-gutter,
+.rbc-time-gutter .rbc-timeslot-group {
+  color: oklch(0.85 0 0) !important;
+}
+
+/* Eventos (texto del cliente) */
+.rbc-event {
+  color: white !important;
+  font-weight: 600;
+}
+
+
+/* ================================
+   📆 Popup "+ more" (MES)
+================================ */
+
+.rbc-overlay {
+  background: oklch(0.205 0 0 / 95%) !important;
+  border-radius: 16px;
+  border: 1px solid oklch(1 0 0 / 15%);
+  padding: 12px;
+  backdrop-filter: blur(12px);
+}
+
+.rbc-overlay-header {
+  color: white !important;
+  font-weight: 700;
+  border-bottom: 1px solid oklch(1 0 0 / 15%);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.rbc-overlay .rbc-event {
+  background: linear-gradient(
+    135deg,
+    oklch(0.488 0.243 264.376),
+    oklch(0.627 0.265 303.9)
+  ) !important;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
+/* ================================
+   📆 FIX popup "+ more"
+================================ */
+
+/* Permitir que el popup salga del calendario */
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+  overflow: visible !important;
+}
+
+/* Popup encima de TODO */
+.rbc-overlay {
+  z-index: 9999 !important;
+  position: absolute !important;
+}
+
+/* Evitar que algún padre lo tape */
+.rbc-calendar {
+  position: relative;
+  z-index: 1;
+}
+
+
+
