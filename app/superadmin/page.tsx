@@ -90,7 +90,8 @@ export default function SuperAdmin() {
       setMensaje(null);
     } catch (error) {
       console.error('Error al cargar clientes:', error);
-      setMensaje({ text: '⛔ Error al cargar los clientes. Verifica el token.', type: 'error' });
+      const errorMsg = error instanceof Error ? error.message : 'Error desconocido';
+      setMensaje({ text: `⛔ Error al cargar los clientes: ${errorMsg}. Verifica el token.`, type: 'error' });
     } finally {
       setCargando(false);
       setRefrescando(false);
@@ -130,7 +131,8 @@ export default function SuperAdmin() {
       }
     } catch (error) {
       console.error('Error al renovar:', error);
-      setMensaje({ text: `⛔ Error al renovar: ${error.message}`, type: 'error' });
+      const errorMsg = error instanceof Error ? error.message : 'Error desconocido';
+      setMensaje({ text: `⛔ Error al renovar: ${errorMsg}`, type: 'error' });
     }
   };
 
@@ -254,61 +256,60 @@ export default function SuperAdmin() {
                 <th className="p-4 text-center font-semibold">Acciones</th>
               </tr>
             </thead>
-           <tbody>
-  {filteredClientes.map((c) => {
-    const fecha = c.subscription_valid_until ? new Date(c.subscription_valid_until) : null;
-    const hoy = new Date();
-    const diasRestantes =
-      fecha && fecha > hoy
-        ? Math.ceil((fecha.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
-        : null;
+            <tbody>
+              {filteredClientes.map((c) => {
+                const fecha = c.subscription_valid_until ? new Date(c.subscription_valid_until) : null;
+                const hoy = new Date();
+                const diasRestantes =
+                  fecha && fecha > hoy
+                    ? Math.ceil((fecha.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
+                    : null;
 
-    let estado = null;
-    let icon = null;
-    let color = '';
+                let estado = null;
+                let icon = null;
+                let color = '';
 
-    if (!fecha) {
-      estado = 'Sin suscripción';
-      icon = <AlertCircle className="h-4 w-4" />;
-      color = 'text-red-400';
-    } else if (fecha < hoy) {
-      estado = `Vencido (${fecha.toLocaleDateString('es-ES')})`;
-      icon = <AlertCircle className="h-4 w-4" />;
-      color = 'text-red-400';
-    } else if (diasRestantes <= 5) {
-      estado = `${fecha.toLocaleDateString('es-ES')} (${diasRestantes} días)`;
-      icon = <Clock className="h-4 w-4" />;
-      color = 'text-yellow-400';
-    } else {
-      estado = fecha.toLocaleDateString('es-ES');
-      icon = <CheckCircle className="h-4 w-4" />;
-      color = 'text-green-400';
-    }
+                if (!fecha) {
+                  estado = 'Sin suscripción';
+                  icon = <AlertCircle className="h-4 w-4" />;
+                  color = 'text-red-400';
+                } else if (fecha < hoy) {
+                  estado = `Vencido (${fecha.toLocaleDateString('es-ES')})`;
+                  icon = <AlertCircle className="h-4 w-4" />;
+                  color = 'text-red-400';
+                } else if (diasRestantes <= 5) {
+                  estado = `${fecha.toLocaleDateString('es-ES')} (${diasRestantes} días)`;
+                  icon = <Clock className="h-4 w-4" />;
+                  color = 'text-yellow-400';
+                } else {
+                  estado = fecha.toLocaleDateString('es-ES');
+                  icon = <CheckCircle className="h-4 w-4" />;
+                  color = 'text-green-400';
+                }
 
-    return (
-      <tr key={c.id} className="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
-        <td className="p-4 font-medium">{c.nombre}</td>
-        <td className="p-4">{c.email}</td>
-        <td className="p-4 font-mono text-sm">{c.slug}</td>
-        <td className="p-4">
-          <div className="flex items-center gap-2">
-            {icon}
-            <span className={color}>{estado}</span>
-          </div>
-        </td>
-        <td className="p-4 text-center">
-          <button
-            onClick={() => renovar(c.slug, c.nombre)}
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            // 👈 Removí el 'disabled' para que siempre se pueda renovar
-          >
-            +30 días
-          </button>
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                return (
+                  <tr key={c.id} className="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                    <td className="p-4 font-medium">{c.nombre}</td>
+                    <td className="p-4">{c.email}</td>
+                    <td className="p-4 font-mono text-sm">{c.slug}</td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        {icon}
+                        <span className={color}>{estado}</span>
+                      </div>
+                    </td>
+                    <td className="p-4 text-center">
+                      <button
+                        onClick={() => renovar(c.slug, c.nombre)}
+                        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                      >
+                        +30 días
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
       )}
