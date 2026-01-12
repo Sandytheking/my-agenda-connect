@@ -28,13 +28,21 @@ import {
   AlertTriangle,
   Calendar as SyncIcon,
 } from 'lucide-react';
-import { Calendar, dateFnsLocalizer, Views, Event } from 'react-big-calendar';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import es from 'date-fns/locale/es'; // ← Fix: Import explícito para locale
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { es } from 'date-fns/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css'; // Importa el CSS base
+import { Calendar, dateFnsLocalizer, Views, type View } from 'react-big-calendar';
+
+
+
+import type { Event as RBCEvent } from 'react-big-calendar';
+
+interface CalendarEvent extends RBCEvent {
+  id: string;
+  canceled: boolean;
+  syncId?: string;
+}
+
 
 // Configuración para react-big-calendar con date-fns
 const locales = {
@@ -59,14 +67,7 @@ type Cita = {
   cancelada?: boolean;
 };
 
-type CalendarEvent = Event & {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  canceled?: boolean;
-  syncId?: string;
-};
+
 
 export default function AgendaPage() {
   const router = useRouter();
@@ -79,7 +80,7 @@ export default function AgendaPage() {
   const [mensaje, setMensaje] = useState<string>('');
   const [loadingData, setLoadingData] = useState<boolean>(false);
   const [totalCitasMes, setTotalCitasMes] = useState<number | null>(null);
-  const [view, setView] = useState<Views>(Views.DAY); // Vista por defecto: día
+  const [view, setView] = useState<View>(Views.DAY); // Vista por defecto: día
   const [calendarDate, setCalendarDate] = useState<Date>(new Date()); // Fecha central del calendario
   // ---- Nuevo estado para modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -179,21 +180,23 @@ export default function AgendaPage() {
     };
   }, [slug, BASE_API]);
 
-  // ---- Mapear citas a eventos de calendario
-  const eventosCalendario = React.useMemo(() => {
-    return citas.map((cita): CalendarEvent => {
-      const start = new Date(cita.inicio);
-      const end = new Date(start.getTime() + 30 * 60 * 1000); // Asume 30 min por cita; ajusta si necesitas duración real
-      return {
-        id: cita.id,
-        title: `${cita.nombre} - ${DateTime.fromJSDate(start).toFormat('hh:mm a')}`,
-        start,
-        end,
-        canceled: cita.cancelada || false,
-        syncId: cita.evento_id,
-      };
-    });
-  }, [citas]);
+// ---- Mapear citas a eventos de calendario (DEBE IR ANTES DEL return)
+const events: CalendarEvent[] = citas.map((cita) => {
+  const start = new Date(cita.inicio);
+  const end = new Date(start.getTime() + 30 * 60 * 1000);
+
+  return {
+    id: cita.id,
+    title: `${cita.nombre} - ${DateTime.fromJSDate(start).toFormat('hh:mm a')}`,
+    start,
+    end,
+    canceled: cita.cancelada ?? false,
+    syncId: cita.evento_id,
+    allDay: false,
+  };
+});
+
+
 
   // ---- EventStyleGetter para personalizar eventos
   const eventStyleGetter = (event: CalendarEvent) => {
@@ -223,9 +226,10 @@ export default function AgendaPage() {
 };
 
 
-  const handleViewChange = (newView: Views) => {
-    setView(newView);
-  };
+const handleViewChange = (newView: View) => {
+  setView(newView);
+};
+
 
   // ---- Handler para seleccionar evento y abrir modal
   const handleSelectEvent = (event: CalendarEvent) => {
@@ -281,45 +285,49 @@ export default function AgendaPage() {
       </div>
 
       {/* HEADER */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="flex justify-between items-center px-4 sm:px-6 lg:px-8 pt-6 pb-4 border-b border-white/10"
-      >
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            if (typeof window !== 'undefined') sessionStorage.removeItem('slug');
-            router.push('/login');
-          }}
-          className="flex items-center gap-2 bg-red-600/20 hover:bg-red-600/30 text-white font-medium px-4 py-2 rounded-xl border border-red-500/30 transition-colors"
-        >
-          <LogOut className="w-4 h-4" />
-          Cerrar sesión
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => router.push('/analiticas')}
-          className="flex items-center gap-2 bg-purple-600/20 hover:bg-purple-600/30 text-white font-medium px-4 py-2 rounded-xl border border-purple-500/30 transition-colors"
-        >
-          <BarChart3 className="w-4 h-4" />
-          Ver analíticas
-        </motion.button>
+  <motion.header
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+  className="px-2 sm:px-4 lg:px-6 pt-4 pb-3 sm:pt-6 sm:pb-4 border-b border-white/10"
+>
+  <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => {
+        if (typeof window !== 'undefined') sessionStorage.removeItem('slug');
+        router.push('/login');
+      }}
+      className="w-full sm:w-auto flex-1 sm:flex-none min-h-12 px-3 py-2 sm:px-4 sm:py-2 bg-red-600/20 hover:bg-red-600/30 text-white font-medium rounded-xl border border-red-500/30 transition-colors text-sm sm:text-base flex items-center justify-center sm:justify-start gap-1 sm:gap-2"
+    >
+      <LogOut className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+      <span className="sm:inline hidden">Cerrar sesión</span>
+      <span className="sm:hidden">Cerrar</span>
+    </motion.button>
 
- <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => router.push('/admin-avanzado')}
-          className="flex items-center gap-2 bg-purple-600/20 hover:bg-purple-600/30 text-white font-medium px-4 py-2 rounded-xl border border-purple-500/30 transition-colors"
-        >
-    
-          ⚙️Configuración
-        </motion.button>
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => router.push('/analiticas')}
+      className="w-full sm:w-auto flex-1 sm:flex-none min-h-12 px-3 py-2 sm:px-4 sm:py-2 bg-purple-600/20 hover:bg-purple-600/30 text-white font-medium rounded-xl border border-purple-500/30 transition-colors text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2"
+    >
+      <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+      <span className="sm:inline hidden">Ver analíticas</span>
+      <span className="sm:hidden">Analíticas</span>
+    </motion.button>
 
-      </motion.header>
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => router.push('/admin-avanzado')}
+      className="w-full sm:w-auto flex-none min-h-12 px-3 py-2 sm:px-4 sm:py-2 bg-purple-600/20 hover:bg-purple-600/30 text-white font-medium rounded-xl border border-purple-500/30 transition-colors text-sm sm:text-base flex items-center justify-center gap-1 sm:gap-2"
+    >
+      <span className="sm:hidden">⚙️</span>
+      <span className="hidden sm:inline">⚙️ Configuración</span>
+    </motion.button>
+  </div>
+</motion.header>
 
       <main className="relative z-10 px-4 sm:px-6 lg:px-8 py-8">
         {/* TITLE & STATS */}
@@ -375,96 +383,99 @@ export default function AgendaPage() {
           </motion.div>
         )}
 
-        {/* CALENDARIO */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-4 sm:p-6 overflow-hidden"
-          style={{ height: '70vh' }} // Altura fija para el calendario
-        >
-          {slug && (
-            <ExportButtons 
-              citasFiltradas={citas.filter((cita) => {
-                // Filtrar para export: usar la vista actual (día/semana/mes); ajusta según necesidad
-                const citaDate = new Date(cita.inicio);
-                if (view === 'day') {
-                  return citaDate.toDateString() === calendarDate.toDateString();
-                } else if (view === 'week') {
-                  const startOfWeekDate = startOfWeek(calendarDate, { weekStartsOn: 1 });
-                  const endOfWeekDate = new Date(startOfWeekDate);
-                  endOfWeekDate.setDate(endOfWeekDate.getDate() + 6);
-                  return citaDate >= startOfWeekDate && citaDate <= endOfWeekDate;
-                } else {
-                  // Mes: todas las citas del mes
-                  const startOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
-                  const endOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0);
-                  return citaDate >= startOfMonth && citaDate <= endOfMonth;
-                }
-              })}
-              formattedDate={format(calendarDate, 'MMMM yyyy', { locale: es })}
-              slug={slug} 
-            />
-          )}
-          
-         <Calendar
-  localizer={localizer}
-  events={eventosCalendario}
-  startAccessor="start"
-  endAccessor="end"
-  style={{ height: '100%' }}
-  view={view}
-  date={calendarDate}
-  onView={handleViewChange}
-  onNavigate={handleNavigate}
-  eventPropGetter={eventStyleGetter}
-  messages={{
-    next: 'Siguiente',
-    previous: 'Anterior',
-    today: 'Hoy',
-    month: 'Mes',
-    week: 'Semana',
-    day: 'Día',
-    agenda: 'Agenda',
-  }}
-  popup
-  onSelectEvent={handleSelectEvent}
-/>
-  </motion.section>
+       {/* CALENDARIO */}
+<motion.section
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.3 }}
+  className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-3 sm:p-4 lg:p-6 overflow-hidden w-full"
+  style={{ height: 'calc(70vh - 1rem)' }}
+>
+  {slug && (
+    <ExportButtons
+      citasFiltradas={citas.filter((cita) => {
+        const citaDate = new Date(cita.inicio);
+        if (view === 'day') {
+          return citaDate.toDateString() === calendarDate.toDateString();
+        } else if (view === 'week') {
+          const startOfWeekDate = startOfWeek(calendarDate, { weekStartsOn: 1 });
+          const endOfWeekDate = new Date(startOfWeekDate);
+          endOfWeekDate.setDate(endOfWeekDate.getDate() + 6);
+          return citaDate >= startOfWeekDate && citaDate <= endOfWeekDate;
+        } else {
+          const startOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+          const endOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0);
+          return citaDate >= startOfMonth && citaDate <= endOfMonth;
+        }
+      })}
+      formattedDate={format(calendarDate, 'MMMM yyyy', { locale: es })}
+      slug={slug}
+    />
+  )}
+  
+  <div className="h-full overflow-hidden flex flex-col">
+    <div className="flex-1 overflow-x-auto">
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        culture="es"
+        endAccessor="end"
+        style={{ height: '100%', width: '100%' }}
+        view={view}
+        date={calendarDate}
+        onView={handleViewChange}
+        onNavigate={handleNavigate}
+        eventPropGetter={eventStyleGetter}
+        messages={{
+          next: 'Siguiente',
+          previous: 'Anterior',
+          today: 'Hoy',
+          month: 'Mes',
+          week: 'Semana',
+          day: 'Día',
+          agenda: 'Agenda',
+        }}
+        popup
+        onSelectEvent={handleSelectEvent}
+      />
+    </div>
+  </div>
+</motion.section>
 
-        {/* Controles adicionales para navegación (incluyendo Día) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex justify-center items-center gap-4 mt-4 text-sm text-gray-400"
-        >
-          <button 
-            onClick={() => setView('day')} 
-            className={`px-4 py-2 rounded-xl transition-all ${view === 'day' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25' : 'bg-white/10 hover:bg-white/20 border border-white/20'}`}
-          >
-            Día
-          </button>
-          <button 
-            onClick={() => setView('week')} 
-            className={`px-4 py-2 rounded-xl transition-all ${view === 'week' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25' : 'bg-white/10 hover:bg-white/20 border border-white/20'}`}
-          >
-            Semana
-          </button>
-          <button 
-            onClick={() => setView('month')} 
-            className={`px-4 py-2 rounded-xl transition-all ${view === 'month' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25' : 'bg-white/10 hover:bg-white/20 border border-white/20'}`}
-          >
-            Mes
-          </button>
-          <button 
-            onClick={() => setCalendarDate(new Date())} 
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
-          >
-            Hoy
-          </button>
-        </motion.div>
-      </main>
+{/* Controles adicionales para navegación (incluyendo Día) */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.4 }}
+  className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-3 sm:mt-4 px-2 text-xs sm:text-sm text-gray-400"
+>
+  <button
+    onClick={() => setView('day')}
+    className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-xl transition-all ${view === 'day' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25' : 'bg-white/10 hover:bg-white/20 border border-white/20'}`}
+  >
+    Día
+  </button>
+  <button
+    onClick={() => setView('week')}
+    className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-xl transition-all ${view === 'week' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25' : 'bg-white/10 hover:bg-white/20 border border-white/20'}`}
+  >
+    Semana
+  </button>
+  <button
+    onClick={() => setView('month')}
+    className={`px-2 py-1.5 sm:px-4 sm:py-2 rounded-xl transition-all ${view === 'month' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25' : 'bg-white/10 hover:bg-white/20 border border-white/20'}`}
+  >
+    Mes
+  </button>
+  <button
+    onClick={() => setCalendarDate(new Date())}
+    className="px-2 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+  >
+    Hoy
+  </button>
+</motion.div>
+</main>
 
       {/* MODAL DE DETALLES DE CITA */}
       <AnimatePresence>

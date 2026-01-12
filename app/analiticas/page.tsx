@@ -21,7 +21,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar, Pie, Radar } from 'react-chartjs-2';
-import { Users, Clock, CalendarDays, FileDown, Download, Calendar } from 'lucide-react';
+import { Users, AlertTriangle, Clock, CalendarDays, FileDown, Download, Calendar } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 ChartJS.register(
