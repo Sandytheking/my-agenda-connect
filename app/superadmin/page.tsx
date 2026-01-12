@@ -260,12 +260,12 @@ export default function SuperAdmin() {
               {filteredClientes.map((c) => {
                 const fecha = c.subscription_valid_until ? new Date(c.subscription_valid_until) : null;
                 const hoy = new Date();
-                const diasRestantes =
-                  fecha && fecha > hoy
-                    ? Math.ceil((fecha.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
-                    : null;
+                let diasRestantes: number | null = null;
+                if (fecha && fecha >= hoy) {
+                  diasRestantes = Math.ceil((fecha.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
+                }
 
-                let estado = null;
+                let estado = '';
                 let icon = null;
                 let color = '';
 
@@ -277,7 +277,7 @@ export default function SuperAdmin() {
                   estado = `Vencido (${fecha.toLocaleDateString('es-ES')})`;
                   icon = <AlertCircle className="h-4 w-4" />;
                   color = 'text-red-400';
-                } else if (diasRestantes <= 5) {
+                } else if (diasRestantes !== null && diasRestantes <= 5) {
                   estado = `${fecha.toLocaleDateString('es-ES')} (${diasRestantes} días)`;
                   icon = <Clock className="h-4 w-4" />;
                   color = 'text-yellow-400';
