@@ -19,9 +19,9 @@ import {
 import LanguageToggle from "@/components/LanguageToggle";
 
 const images = [
-  "/agenda01.png",
-  "/agenda02.png",
-  "/agenda03.png",
+  "/form1.png",
+  "/admin23.png",
+  "/calendario.png",
   "/agenda04.png",
   "/agenda05.png",
 ];

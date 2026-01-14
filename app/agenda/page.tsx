@@ -382,8 +382,7 @@ const handleViewChange = (newView: View) => {
             {mensaje}
           </motion.div>
         )}
-
-       {/* CALENDARIO */}
+{/* CALENDARIO */}
 <motion.section
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
@@ -412,16 +411,20 @@ const handleViewChange = (newView: View) => {
       slug={slug}
     />
   )}
-  
+
   <div className="h-full overflow-hidden flex flex-col">
-    <div className="flex-1 overflow-x-auto">
+    <div className="flex-1 overflow-x-auto overflow-y-auto"> {/* Agregué overflow-y-auto para vertical en día/semana */}
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         culture="es"
         endAccessor="end"
-        style={{ height: '100%', width: '100%' }}
+        style={{ 
+          height: '100%', 
+          width: '100%',
+          minWidth: view === Views.MONTH ? '1000px' : 'auto' // ¡Clave! Fuerza ancho en mes para activar scroll horizontal
+        }}
         view={view}
         date={calendarDate}
         onView={handleViewChange}

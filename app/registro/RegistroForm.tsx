@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Hash, Check, AlertCircle } from "lucide-react";
 import { useRegistro } from "./useRegistro";
+import type { ChangeEvent } from "react";
 
 export default function RegistroForm() {
   const {
@@ -41,7 +42,7 @@ export default function RegistroForm() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredDomains, setFilteredDomains] = useState(domains);
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
 
@@ -58,7 +59,7 @@ export default function RegistroForm() {
     }
   };
 
-  const selectDomain = (domain) => {
+  const selectDomain = (domain: string) => {
     const atIndex = email.lastIndexOf("@");
     const localPart = atIndex !== -1 ? email.substring(0, atIndex) : email;
     setEmail(localPart + "@" + domain);
