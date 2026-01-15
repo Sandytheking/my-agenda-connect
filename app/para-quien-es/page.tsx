@@ -16,21 +16,22 @@ const niches = [
     icon: Scissors,
     title: "Peluquerías",
     desc: "Automatiza reservas, reduce ausencias y permite que tus clientes agenden 24/7 sin llamadas.",
-    href: "/peluqueria",
+    href: "/agenda-para-peluquerias",
   },
   {
     icon: Sparkles,
     title: "Salones de belleza",
     desc: "Gestiona múltiples servicios, profesionales y horarios desde una sola agenda digital.",
-    href: "/salones",
+    href: "/agenda-para-salones-de-belleza",
   },
   {
     icon: Stethoscope,
     title: "Dentistas y clínicas",
     desc: "Agenda citas por doctor, confirma pacientes automáticamente y mejora la experiencia clínica.",
-    href: "/dentistas",
+    href: "/agenda-para-dentistas",
   },
 ];
+
 
 export default function ParaQuienEsPage() {
   return (
@@ -78,32 +79,43 @@ export default function ParaQuienEsPage() {
             Ideal para estos negocios
           </motion.h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {niches.map((niche, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group bg-white/5 border border-white/10 rounded-3xl p-8 relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <niche.icon className="w-12 h-12 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-bold mb-3">{niche.title}</h3>
-                <p className="text-gray-300 text-sm mb-6">{niche.desc}</p>
-                <Link
-                  href={niche.href}
-                  className="inline-flex items-center gap-2 text-blue-400 font-medium group-hover:gap-3 transition-all"
-                >
-                  Ver solución
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+  {niches.map((niche, i) => (
+    <motion.div
+      key={i}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.1, duration: 0.5 }}
+      whileHover={{ y: -5, scale: 1.02 }}
+    >
+      {/* CARD 100% CLICKEABLE */}
+      <Link
+        href={niche.href}
+        className="group block h-full relative z-20 bg-white/5 border border-white/10 rounded-3xl p-8 overflow-hidden hover:bg-gradient-to-br from-blue-500/10 to-cyan-500/10 transition-all duration-300 hover:shadow-2xl"
+      >
+        {/* Glow interno (no bloquea clicks) */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+        <niche.icon className="w-12 h-12 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
+
+        <h3 className="text-xl font-bold mb-3 text-white group-hover:text-blue-300 transition-colors">
+          {niche.title}
+        </h3>
+
+        <p className="text-gray-300 text-sm mb-6">
+          {niche.desc}
+        </p>
+
+        <span className="inline-flex items-center gap-2 text-blue-400 font-medium group-hover:gap-3 transition-all">
+          Ver solución
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </span>
+      </Link>
+    </motion.div>
+  ))}
+</div>
+ </section>
 
         {/* BENEFICIOS GENERALES */}
         <section className="mb-32 max-w-6xl mx-auto">

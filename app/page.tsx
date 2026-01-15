@@ -354,21 +354,21 @@ export default function HomePage() {
 <section className="max-w-4xl mx-auto mb-24 text-center">
   <p className="text-gray-400 text-sm">
     Agenda Connect es ideal para{" "}
-    <Link href="/peluqueria" className="underline">
-      peluquerías
+    <Link href="/agenda-para-peluquerias" className="underline">
+      Barberias
     </Link>
     ,{" "}
-    <Link href="/salones" className="underline">
+    <Link href="/agenda-para-salones-de-belleza" className="underline">
       salones de belleza
     </Link>{" "}
     y{" "}
-    <Link href="/dentistas" className="underline">
+    <Link href="/agenda-para-dentistas" className="underline">
       consultorios dentales
     </Link>
     .
   </p>
 </section>
-        
+
 
         {/* ================= CTA FINAL ================= */}
         <section className="max-w-4xl mx-auto text-center mb-24 lg:mb-40 py-16 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10">
