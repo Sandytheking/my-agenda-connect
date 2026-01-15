@@ -271,6 +271,7 @@ export default function HomePage() {
           </div>
         </section>
 
+
         {/* ================= SOLUCIÓN ================= */}
         <section className="max-w-7xl mx-auto mb-24 lg:mb-32">
           <motion.h2
@@ -302,7 +303,20 @@ export default function HomePage() {
           </div>
         </section>
 
+
+
+
         <section className="max-w-4xl mx-auto mb-24 text-center">
+<div className="flex justify-center">
+  <Link
+    href="/para-quien-es"
+    className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 via-purple-500 to-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl hover:from-purple-700 hover:to-blue-700"
+  >
+    ¿Para quién es Agenda Connect?
+    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+  </Link>
+</div>
+
   <p className="text-gray-400 text-sm">
     ¿Tienes un negocio en República Dominicana? Descubre nuestro{" "}
     <Link
@@ -313,9 +327,6 @@ export default function HomePage() {
     </Link>.
   </p>
 </section>
-
-
-
 
         {/* ================= TESTIMONIOS ================= */}
         <section className="max-w-6xl mx-auto mb-24 lg:mb-32">

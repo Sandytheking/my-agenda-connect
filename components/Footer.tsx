@@ -29,6 +29,7 @@ export default function Footer() {
           <Link href="/agenda-para-peluquerias" className="hover:text-[#A020F0] transition">Agenda para barberias</Link>
           <Link href="/agenda-para-dentistas" className="hover:text-[#A020F0] transition">Agenda para dentistas</Link>
           <Link href="/agenda-para-salones-de-belleza" className="hover:text-[#A020F0] transition">Agenda para salones de belleza</Link>
+          <Link href="/para-quien-es" className="hover:text-[#A020F0] transition">¿Para quién es Agenda Connect?</Link>
           <Link href="/software-de-reservas-republica-dominicana" className="hover:text-[#A020F0] transition">Software de reservas en República Dominicana</Link>
           
         </div>
