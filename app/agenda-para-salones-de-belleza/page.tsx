@@ -13,8 +13,7 @@ export const metadata: Metadata = {
     "sistema de citas belleza RD",
   ],
   alternates: {
-    canonical:
-      "https://www.agenda-connect.com/agenda-para-salones-de-belleza",
+    canonical: "https://www.agenda-connect.com/agenda-para-salones-de-belleza",
   },
   openGraph: {
     title: "Agenda online para salones de belleza | Agenda Connect",
@@ -28,5 +27,39 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <SalonesClient />;
+  return (
+    <>
+      {/* ✅ Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Agenda Connect",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            description:
+              "Software de reservas para salones de belleza en República Dominicana. Gestiona servicios, profesionales y citas en una sola agenda digital.",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "DOP",
+            },
+            areaServed: {
+              "@type": "Country",
+              name: "República Dominicana",
+            },
+            audience: {
+              "@type": "Audience",
+              audienceType: "Salones de belleza",
+            },
+            url: "https://www.agenda-connect.com/agenda-para-salones-de-belleza",
+          }),
+        }}
+      />
+
+      <SalonesClient />
+    </>
+  );
 }

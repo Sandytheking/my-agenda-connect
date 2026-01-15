@@ -13,8 +13,7 @@ export const metadata: Metadata = {
     "sistema de citas peluquería RD",
   ],
   alternates: {
-    canonical:
-      "https://www.agenda-connect.com/agenda-para-peluquerias",
+    canonical: "https://www.agenda-connect.com/agenda-para-peluquerias",
   },
   openGraph: {
     title: "Agenda online para peluquerías | Agenda Connect",
@@ -28,5 +27,39 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <PeluqueriasClient />;
+  return (
+    <>
+      {/* ✅ Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Agenda Connect",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            description:
+              "Agenda online para peluquerías en República Dominicana con reservas 24/7 y recordatorios automáticos.",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "DOP",
+            },
+            areaServed: {
+              "@type": "Country",
+              name: "República Dominicana",
+            },
+            audience: {
+              "@type": "Audience",
+              audienceType: "Peluquerías",
+            },
+            url: "https://www.agenda-connect.com/agenda-para-peluquerias",
+          }),
+        }}
+      />
+
+      <PeluqueriasClient />
+    </>
+  );
 }

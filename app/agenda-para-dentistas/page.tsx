@@ -13,8 +13,7 @@ export const metadata: Metadata = {
     "sistema de citas para clínicas RD",
   ],
   alternates: {
-    canonical:
-      "https://www.agenda-connect.com/agenda-para-dentistas",
+    canonical: "https://www.agenda-connect.com/agenda-para-dentistas",
   },
   openGraph: {
     title: "Agenda online para dentistas | Agenda Connect",
@@ -28,5 +27,39 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DentistasClient />;
+  return (
+    <>
+      {/* ✅ Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Agenda Connect",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            description:
+              "Agenda online para dentistas y clínicas en República Dominicana. Agenda por doctor, confirmación automática y recordatorios.",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "DOP",
+            },
+            areaServed: {
+              "@type": "Country",
+              name: "República Dominicana",
+            },
+            audience: {
+              "@type": "Audience",
+              audienceType: "Dentistas y clínicas",
+            },
+            url: "https://www.agenda-connect.com/agenda-para-dentistas",
+          }),
+        }}
+      />
+
+      <DentistasClient />
+    </>
+  );
 }
