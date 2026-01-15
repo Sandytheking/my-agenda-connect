@@ -144,11 +144,10 @@ export default function HomePage() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="text-4xl sm:text-5xl lg:text-7xl font-black leading-[0.9] mb-6 bg-gradient-to-r from-white via-white/90 to-gray-300 bg-clip-text text-transparent"
             >
-              Menos citas perdidas.
+              Sistema de Reservas Online para Negocios
               <br />
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-                Más control total.
-              </span>
+             
+
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -156,7 +155,7 @@ export default function HomePage() {
               transition={{ delay: 0.6, duration: 0.6 }}
               className="text-gray-300 text-lg lg:text-xl max-w-lg leading-relaxed"
             >
-              Agenda Connect automatiza reservas, envía recordatorios inteligentes y entrega analíticas en tiempo real. Toma decisiones basadas en datos y crece sin estrés.
+              Agenda Connect automatiza reservas y recordatorios online para salones, clínicas, barberías y más. Reserva 24/7 con integración a Google Calendar.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -188,6 +187,15 @@ export default function HomePage() {
               Sin tarjeta · Configuración en <span className="text-green-300">2 minutos</span>
             </motion.p>
           </motion.div>
+
+<motion.p
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 0 }}
+  className="sr-only"
+>
+  Agenda Connect es un software de reservas para negocios en República Dominicana,
+  ideal para salones de belleza, clínicas, barberías y profesionales de servicios.
+</motion.p>
 
           {/* CARRUSEL MEJORADO */}
           <motion.div
@@ -294,6 +302,21 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="max-w-4xl mx-auto mb-24 text-center">
+  <p className="text-gray-400 text-sm">
+    ¿Tienes un negocio en República Dominicana? Descubre nuestro{" "}
+    <Link
+      href="/software-de-reservas-republica-dominicana"
+      className="text-purple-400 hover:text-purple-300 underline underline-offset-4"
+    >
+      software de reservas diseñado para negocios dominicanos
+    </Link>.
+  </p>
+</section>
+
+
+
+
         {/* ================= TESTIMONIOS ================= */}
         <section className="max-w-6xl mx-auto mb-24 lg:mb-32">
           <motion.h2
@@ -326,6 +349,26 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+
+<section className="max-w-4xl mx-auto mb-24 text-center">
+  <p className="text-gray-400 text-sm">
+    Agenda Connect es ideal para{" "}
+    <Link href="/peluqueria" className="underline">
+      peluquerías
+    </Link>
+    ,{" "}
+    <Link href="/salones" className="underline">
+      salones de belleza
+    </Link>{" "}
+    y{" "}
+    <Link href="/dentistas" className="underline">
+      consultorios dentales
+    </Link>
+    .
+  </p>
+</section>
+        
 
         {/* ================= CTA FINAL ================= */}
         <section className="max-w-4xl mx-auto text-center mb-24 lg:mb-40 py-16 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10">

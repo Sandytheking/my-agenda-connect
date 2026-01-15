@@ -80,11 +80,9 @@ export default function SalonesLanding() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="text-4xl sm:text-5xl lg:text-7xl font-black leading-[0.9] mb-6 bg-gradient-to-r from-white via-white/90 to-pink-400 bg-clip-text text-transparent"
             >
-              Agenda tu salón
+              Agenda online para Salones de belleza.
               <br />
-              <span className="text-transparent bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text">
-                sin usar WhatsApp
-              </span>
+             
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

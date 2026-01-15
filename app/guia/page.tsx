@@ -52,7 +52,7 @@ export default function GuiaPage() {
     <div className="min-h-screen bg-black text-white px-4 py-20">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-16 text-purple-400">
-          Guía paso a paso para comenzar
+          Guía para automatizar la agenda de tu negocio
         </h1>
 
         {pasos.map((paso, index) => (

@@ -13,8 +13,8 @@ import Script from 'next/script'; // 👈 Importante Google anality
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Agenda Connect',
-  description: 'Sistema de gestión de citas para negocios',
+  title: 'Sistema de Reservas Online para Negocios | Agenda Connect',
+  description: 'Agenda Connect es un sistema de reservas online para negocios de servicios. Automatiza citas, recordatorios y sincroniza con Google Calendar.',
   icons: {
     icon: '/favicon.png',
   },
