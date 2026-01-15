@@ -49,11 +49,9 @@ export default function SalonesLanding() {
       <div className="max-w-7xl mx-auto pt-20 lg:pt-32 pb-20">
         {/* HERO CON FONDO */}
        <section className="relative h-[80vh] lg:h-[90vh] flex items-center justify-center overflow-hidden mb-24 lg:mb-32">
-  {/* Imagen fondo */}
-  <div
-    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-    style={{ backgroundImage: "url('/salon1-bg.jpg')" }}
-  />
+  
+  
+
   {/* Overlay CLARO, sin blur */}
   <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60" />  {/* Más claro: /30 en lugar de /50 */}
   {/* Glow adicional */}

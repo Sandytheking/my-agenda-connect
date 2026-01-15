@@ -49,15 +49,11 @@ export default function SalonesLanding() {
       <div className="max-w-7xl mx-auto pt-20 lg:pt-32 pb-20">
         {/* HERO CON FONDO */}
        <section className="relative h-[80vh] lg:h-[90vh] flex items-center justify-center overflow-hidden mb-24 lg:mb-32">
-  {/* Imagen fondo */}
-  <div
-    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-    style={{ backgroundImage: "url('/peluqueria.jpg')" }}
-  />
+
   {/* Overlay CLARO, sin blur */}
   <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60" />  {/* Más claro: /30 en lugar de /50 */}
   {/* Glow adicional */}
-  <div className="absolute -top-32 -left-32 w-[400px] h-[400px] bg-pink-500/30 blur-[120px] animate-bounce" />
+  <div className="absolute -top-32 -left-32 w-[400px] h-[400px] bg-blue-500/30 blur-[120px] animate-bounce" />
   {/* Contenido */}
   <motion.div
     initial={{ opacity: 0, y: 50 }}
