@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://agenda-connect.com/sitemap.xml",
+    sitemap: "https://www.agenda-connect.com/sitemap.xml",
   };
 }
