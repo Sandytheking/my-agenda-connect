@@ -1,1 +1,16 @@
 .vercel
+
+# Node
+node_modules/
+
+# Builds
+dist/
+out/
+.next/
+
+# Instaladores
+*.exe
+
+# Descargas locales
+public/descargas/
+
