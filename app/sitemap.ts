@@ -40,6 +40,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+
+      {
+      url: `${baseUrl}/sistema-prestamo-san`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+
       {
       url: `${baseUrl}/software-de-reservas-republica-dominicana`,
       lastModified: new Date(),
