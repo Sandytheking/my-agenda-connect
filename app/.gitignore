@@ -1,1 +1,8 @@
 .vercel
+# Builds / instaladores
+*.exe
+dist/
+
+node_modules/
+.env
+*.log

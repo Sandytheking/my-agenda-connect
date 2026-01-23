@@ -47,10 +47,13 @@ export default function SistemaPrestamoSAN() {
     }
   }, []);
 
-  const isWindows = so === 'windows';
-  const downloadUrl = isWindows 
-    ? "/descargas/san-pro/SAN-PRO-Setup-v2.1.0.exe"
-    : "#"; // Puedes agregar macOS después
+const isWindows = so === 'windows'
+
+const downloadUrl = isWindows
+  ? 'https://github.com/Sandytheking/san-pro-desktop/releases/download/v2.1.0/San-Pro-Setup-v2.1.0.exe'
+  : '#'
+
+
 
   return (
     <div className={darkMode ? 'dark bg-gray-950 text-gray-100' : 'bg-gray-50 text-gray-900'}>
