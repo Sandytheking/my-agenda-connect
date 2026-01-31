@@ -1,7 +1,7 @@
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Mantienes tus redirects actuales
+  // Tus redirects actuales (los mantienes tal cual)
   async redirects() {
     return [
       {
@@ -9,34 +9,44 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Si tienes más redirects, agrégalos aquí
     ];
   },
 
-  // Configuración obligatoria para imágenes remotas
+  // Configuración para imágenes remotas (esto soluciona el error)
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'thumbs.dreamstime.com',
         port: '',
-        pathname: '/**',          // permite cualquier ruta en ese dominio
+        pathname: '/**',
       },
+
+{
+  protocol: 'https',
+  hostname: 'happoin.com',
+  port: '',
+  pathname: '/storage/uploads/**',
+},
+
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
       },
-      // Puedes agregar más dominios si usas otros en el futuro
-      // Ejemplo:
-      // {
-      //   protocol: 'https',
-      //   hostname: 'cdn.pixabay.com',
-      //   port: '',
-      //   pathname: '/**',
-      // },
+     
+       {
+         protocol: 'https',
+         hostname: 'blog.miosalon.com',
+         port: '',
+         pathname: '/wp-content/uploads/**',
+      },
     ],
   },
+
+  // Si tienes otras configuraciones (ej. experimental, env, etc.), ponlas aquí
 };
 
 module.exports = nextConfig;

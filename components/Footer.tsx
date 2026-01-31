@@ -26,6 +26,7 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start space-y-3">
           <h3 className="text-white font-semibold text-lg mb-2">Enlaces</h3>
           <Link href="/" className="hover:text-[#A020F0] transition">Inicio</Link>
+          <Link href="/blog" className="hover:text-[#A020F0] transition">Blog</Link>
           <Link href="/agenda-para-peluquerias" className="hover:text-[#A020F0] transition">Agenda para barberias</Link>
           <Link href="/agenda-para-dentistas" className="hover:text-[#A020F0] transition">Agenda para dentistas</Link>
           <Link href="/agenda-para-salones-de-belleza" className="hover:text-[#A020F0] transition">Agenda para salones de belleza</Link>
